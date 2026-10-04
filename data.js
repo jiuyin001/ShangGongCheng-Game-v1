@@ -2,10 +2,10 @@
 
 const DEFAULT_CONFIG = {
   bins: [
-    { id: 'recyclable', name: '可回收物', color: '#3B82F6', desc: '纸张、塑料、金属、玻璃等', mark: 'assets/marks/mark-recyclable-new.png' },
-    { id: 'kitchen', name: '厨余垃圾', color: '#8B5E3C', desc: '剩菜剩饭、瓜果皮核等', mark: 'assets/marks/mark-wet-new.png' },
-    { id: 'hazardous', name: '有害垃圾', color: '#E5484D', desc: '电池、药品、灯管等', mark: 'assets/marks/mark-hazardous-new.png' },
-    { id: 'other', name: '其他垃圾', color: '#3D3A37', desc: '以上三类以外的垃圾', mark: 'assets/marks/mark-dry-new.png' }
+    { id: 'recyclable', name: '可回收物', color: '#3B82F6', desc: '纸张、塑料、金属、玻璃等', mark: 'assets/marks/mark-recyclable-new.jpg' },
+    { id: 'kitchen', name: '厨余垃圾', color: '#8B5E3C', desc: '剩菜剩饭、瓜果皮核等', mark: 'assets/marks/mark-wet-new.jpg' },
+    { id: 'hazardous', name: '有害垃圾', color: '#E5484D', desc: '电池、药品、灯管等', mark: 'assets/marks/mark-hazardous-new.jpg' },
+    { id: 'other', name: '其他垃圾', color: '#3D3A37', desc: '以上三类以外的垃圾', mark: 'assets/marks/mark-dry-new.jpg' }
   ],
 
   /* R64：物品数据模型（四模式共用同一池 config.items —— 飞行棋/跑酷/小达人/消消乐均从此取图取分类，
@@ -272,7 +272,7 @@ const DEFAULT_CONFIG = {
         name: '可回收物',
         alias: '可回收物',
         color: '#3B82F6',
-        mark: 'assets/marks/mark-recyclable-new.png',
+        mark: 'assets/marks/mark-recyclable-new.jpg',
         def: '指废纸张、废塑料、废玻璃制品、废金属、废织物等适宜回收、可循环利用的生活废弃物。',
         items: ['报纸','纸箱','书本','纸袋','信封','纸铝塑复合包装','塑料瓶','塑料玩具','油桶','乳液罐','食品保鲜盒','泡沫塑料','塑料衣架','酒瓶','玻璃放大镜','玻璃杯','窗玻璃','碎玻璃','易拉罐','锅','螺丝刀','刀','指甲钳','刀片','皮鞋','衣服','床单枕头','包','毛绒玩具'],
         note: '投放时保持清洁干燥，避免污染：废纸保持平整；立体包装物清空内容物、清洁后压扁投放；玻璃制品轻放，有尖锐边角的包裹后投放。'
@@ -281,7 +281,7 @@ const DEFAULT_CONFIG = {
         name: '厨余垃圾',
         alias: '湿垃圾（易腐垃圾）',
         color: '#8B5E3C',
-        mark: 'assets/marks/mark-wet-new.png',
+        mark: 'assets/marks/mark-wet-new.jpg',
         def: '即易腐垃圾，指食材废料、剩菜剩饭、过期食品、瓜皮果核、花卉绿植、中药药渣等易腐的生物质生活废弃物。',
         items: ['剩菜剩饭','火锅汤底','鱼骨','碎骨','茶叶渣','咖啡渣','糕饼','糖果','风干食品','粉末类食品','宠物饲料','水果果肉','水果果皮','水果茎枝','果实','家养绿植','花卉','花瓣','枝叶','中药药渣','鸡蛋及蛋壳','面包','鸡肉','干果仁','蔬菜','蛋糕饼干','动物内脏','苹果核','鱼虾','大米及豆类'],
         note: '投放时应与其他品种垃圾分开；有包装物的去除包装物后分类投放，包装物投放到对应的可回收物或干垃圾收集容器中。'
@@ -290,7 +290,7 @@ const DEFAULT_CONFIG = {
         name: '有害垃圾',
         alias: '有害垃圾',
         color: '#E5484D',
-        mark: 'assets/marks/mark-hazardous-new.png',
+        mark: 'assets/marks/mark-hazardous-new.jpg',
         def: '指废电池、废灯管、废药品、废油漆及其容器等对人体健康或者自然环境造成直接或者潜在危害的生活废弃物。',
         items: ['充电电池','镉镍电池','铅酸电池','蓄电池','纽扣电池','荧光灯','节能灯','卤素灯','过期药物','药品包装','染发剂壳','废油漆桶','洗甲水','过期指甲油','水银血压计','水银体温计','消毒剂','老鼠药','杀虫喷雾','X光片等感光胶片','相片底片'],
         note: '投放时注意轻放：废灯管等易破损的连带包装或包裹后投放；废弃药品宜连带包装一并投放；压力罐装容器排空内容物后投放。'
@@ -299,7 +299,7 @@ const DEFAULT_CONFIG = {
         name: '其他垃圾',
         alias: '干垃圾（其它垃圾）',
         color: '#3D3A37',
-        mark: 'assets/marks/mark-dry-new.png',
+        mark: 'assets/marks/mark-dry-new.jpg',
         def: '即其它垃圾，指除可回收物、有害垃圾、湿垃圾以外的其它生活废弃物。',
         items: ['餐巾纸','卫生间用纸','尿不湿','狗尿垫','猫砂','烟蒂','污损纸张','干燥剂','污损塑料','尼龙制品','编织袋','防碎气泡膜','大骨头','硬贝壳','毛发','泥土','太空沙','陶瓷花盆','带胶制品','旧毛巾','一次性餐具','镜子','陶瓷制品','竹制品','笔','胶带','创可贴','眼镜','内衣裤','污损塑料袋','橡皮泥','灰土'],
         note: '以上三类以外的其它生活废弃物，投入干垃圾桶即可。'

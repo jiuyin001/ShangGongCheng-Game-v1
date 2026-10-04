@@ -26,10 +26,10 @@ const ICON_SVGS = {
 
 /* 垃圾桶配套标识：标准垃圾分类标识图（用户提供新图裁剪） */
 const MARK_IMAGES = {
-  recyclable: 'assets/marks/mark-recyclable-new.png',
-  kitchen: 'assets/marks/mark-wet-new.png',
-  hazardous: 'assets/marks/mark-hazardous-new.png',
-  other: 'assets/marks/mark-dry-new.png'
+  recyclable: 'assets/marks/mark-recyclable-new.jpg',
+  kitchen: 'assets/marks/mark-wet-new.jpg',
+  hazardous: 'assets/marks/mark-hazardous-new.jpg',
+  other: 'assets/marks/mark-dry-new.jpg'
 };
 
 const SVG_TRASH = '<svg viewBox="0 0 24 24" width="30" height="30"><path fill="currentColor" d="M5 4h14v2h-3l-1.5 9H20v2H4v-2h5.5L8 6H5V4zm5.5 3l1.3 7h3.4l1.3-7h-6zm-2 11a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm9 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg>';
@@ -53,18 +53,18 @@ const BUILTIN_ICONS = [
 
 /* 引导形象：默认使用设计好的小程动作图（引导/答对/答错），8 张原图可切换 */
 const AVATAR_IMAGES = [
-  'assets/avatar/avatar-1.png', 'assets/avatar/avatar-2.png', 'assets/avatar/avatar-3.png',
-  'assets/avatar/avatar-4.png', 'assets/avatar/avatar-5.png', 'assets/avatar/avatar-6.png',
-  'assets/avatar/avatar-7.png', 'assets/avatar/avatar-8.png'
+  'assets/avatar/avatar-1.jpg', 'assets/avatar/avatar-2.jpg', 'assets/avatar/avatar-3.jpg',
+  'assets/avatar/avatar-4.jpg', 'assets/avatar/avatar-5.jpg', 'assets/avatar/avatar-6.jpg',
+  'assets/avatar/avatar-7.jpg', 'assets/avatar/avatar-8.jpg'
 ];
 const AVATAR_ACTIONS = {
-  welcome: { name: '挥手引导', src: 'assets/avatar/action-welcome.png' },
-  cheer: { name: '答对欢呼', src: 'assets/avatar/action-cheer.png' },
-  oops: { name: '答错遗憾', src: 'assets/avatar/action-oops.png' }
+  welcome: { name: '挥手引导', src: 'assets/avatar/action-welcome.jpg' },
+  cheer: { name: '答对欢呼', src: 'assets/avatar/action-cheer.jpg' },
+  oops: { name: '答错遗憾', src: 'assets/avatar/action-oops.jpg' }
 };
 /* 角标图片：第9张 + 校名标识 */
 const BRAND_IMAGES = [
-  ['生态小屋探秘（第9张）', 'assets/brand/brand-9.png'],
+  ['生态小屋探秘（第9张）', 'assets/brand/brand-9.jpg'],
   ['校名标识', 'assets/brand/brand-name.jpg']
 ];
 
@@ -295,7 +295,7 @@ function ensureConfig(cfg) {
   if (!cfg.corner) cfg.corner = { img: d.corner.img, text: d.corner.text, scale: d.corner.scale };
   if (typeof cfg.corner.enabled === 'undefined') cfg.corner.enabled = d.corner.enabled;
   /* 角标默认图升级：旧默认彩色贴纸 → 新默认黑白校徽（用户自定义过的保留） */
-  if (cfg.corner.img === 'assets/brand/brand-9.png') {
+  if (cfg.corner.img === 'assets/brand/brand-9.jpg') {
     cfg.corner.img = d.corner.img;
   }
   /* 角标默认开启升级：旧存档曾默认 false，未自定义过角标（文本与图仍是默认值）时翻转为 true，保证手机/新设备能看到校名角标 */
@@ -411,7 +411,7 @@ function ensureConfig(cfg) {
   cfg.bins.forEach((b) => {
     if (!b.mark || typeof b.mark !== 'string' || !/^(assets|data:|https?:)/.test(b.mark)) {
       const base = d.bins.find((x) => x.id === b.id);
-      b.mark = (base && base.mark) || 'assets/marks/mark-dry-new.png';
+      b.mark = (base && base.mark) || 'assets/marks/mark-dry-new.jpg';
     }
     if (typeof b.desc === 'string' && LEGACY_BIN_DESC[b.id] && b.desc === LEGACY_BIN_DESC[b.id]) {
       const base = d.bins.find((x) => x.id === b.id);
@@ -5030,7 +5030,7 @@ function renderEditCorner() {
     grid.appendChild(cell);
   });
   const titleGrid = el.editCorner.querySelector('#title-grid');
-  [AVATAR_ACTIONS.welcome.src, 'assets/brand/brand-9.png'].concat(BRAND_IMAGES.map((p) => p[1])).forEach((path) => {
+  [AVATAR_ACTIONS.welcome.src, 'assets/brand/brand-9.jpg'].concat(BRAND_IMAGES.map((p) => p[1])).forEach((path) => {
     const cell = document.createElement('div');
     cell.className = 'brand-cell' + (config.titleImg === path ? ' is-active' : '');
     cell.dataset.title = path;
@@ -5051,7 +5051,7 @@ function renderEditCorner() {
   enabledBtn.classList.toggle('is-on', !!config.corner.enabled);
   el.editCorner.querySelector('#corner-enabled-label').textContent = config.corner.enabled ? '显示' : '关闭';
   el.editCorner.querySelector('#title-url').value = /^https?:/.test(config.titleImg) ? config.titleImg : '';
-  el.editCorner.querySelector('#title-preview').src = config.titleImg || 'assets/brand/brand-9.png';
+  el.editCorner.querySelector('#title-preview').src = config.titleImg || 'assets/brand/brand-9.jpg';
   el.editCorner.querySelector('#hero-title-input').value = config.settings.heroTitle || '垃圾分一分<br>地球美十分';
   el.editCorner.querySelector('#hero-sub-input').value = config.settings.heroSub || '';
   const stepsArr = config.settings.steps || [];
@@ -5117,11 +5117,11 @@ el.editCorner.addEventListener('input', (e) => {
     saveConfigSilently();
     renderCorner();
     const preview = el.editCorner.querySelector('#corner-preview');
-    preview.querySelector('img').src = config.corner.img || 'assets/brand/brand-9.png';
+    preview.querySelector('img').src = config.corner.img || 'assets/brand/brand-9.jpg';
   } else if (t.id === 'title-url') {
     config.titleImg = t.value.trim();
     $$('.brand-cell', el.editCorner).forEach((c) => c.classList.remove('is-active'));
-    el.editCorner.querySelector('#title-preview').src = config.titleImg || 'assets/brand/brand-9.png';
+    el.editCorner.querySelector('#title-preview').src = config.titleImg || 'assets/brand/brand-9.jpg';
     saveConfigSilently();
     renderBrand();
   } else if (t.id === 'hero-title-input') {
@@ -6646,10 +6646,10 @@ function r63BuildSortAnim(boot) {
   box.innerHTML =
     '<div class="r63-stage">' +
       '<div class="r63-bins">' +
-        '<div class="r63-bin" data-cat="recyclable"><img src="assets/marks/mark-recyclable-new.png" alt="可回收物"></div>' +
-        '<div class="r63-bin" data-cat="kitchen"><img src="assets/marks/mark-wet-new.png" alt="厨余垃圾"></div>' +
-        '<div class="r63-bin" data-cat="hazardous"><img src="assets/marks/mark-hazardous-new.png" alt="有害垃圾"></div>' +
-        '<div class="r63-bin" data-cat="other"><img src="assets/marks/mark-dry-new.png" alt="其他垃圾"></div>' +
+        '<div class="r63-bin" data-cat="recyclable"><img src="assets/marks/mark-recyclable-new.jpg" alt="可回收物"></div>' +
+        '<div class="r63-bin" data-cat="kitchen"><img src="assets/marks/mark-wet-new.jpg" alt="厨余垃圾"></div>' +
+        '<div class="r63-bin" data-cat="hazardous"><img src="assets/marks/mark-hazardous-new.jpg" alt="有害垃圾"></div>' +
+        '<div class="r63-bin" data-cat="other"><img src="assets/marks/mark-dry-new.jpg" alt="其他垃圾"></div>' +
       '</div>' +
       '<img class="r63-guide" alt="引导员">' +
       '<div class="r63-thought">？</div>' +
