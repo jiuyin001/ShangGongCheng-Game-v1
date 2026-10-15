@@ -1,0 +1,7 @@
+ID,名称,类别,图片,分类原因,描述
+newspaper,报纸,可回收物,assets/trash/newspaper.png,干净的报纸属于可回收物。,a folded old newspaper with abstract printed lines
+plastic-bottle,塑料瓶,可回收物,assets/trash/plastic-bottle.png,干净的塑料瓶属于可回收物。,a clear plastic bottle
+banana-peel,香蕉皮,湿垃圾,assets/trash/banana-peel.png,香蕉皮是易腐的厨余垃圾。,a yellow banana peel
+rechargeable-battery,充电电池,有害垃圾,assets/trash/rechargeable-battery.png,充电电池含重金属属于有害垃圾。,a rechargeable battery
+big-bone,大骨头,干垃圾,assets/trash/big-bone.png,大骨头坚硬难粉碎属于干垃圾。,a large pork bone
+corn-cob,玉米棒,干垃圾,assets/trash/corn-cob.png,玉米棒是硬质秸秆难降解属于干垃圾。,a corn cob

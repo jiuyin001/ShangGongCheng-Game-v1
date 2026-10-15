@@ -1,535 +1,337 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>垃圾分类小达人</title>
-  <link rel="preconnect" href="https://miaoda.feishu.cn">
-  <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="learn.css">
-</head>
-<body data-skin="default">
+  <link rel="preload" href="assets/loading-master.webp" as="image" fetchpriority="high">
+  <link rel="preload" href="assets/mascot.webp" as="image" fetchpriority="high">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:,">
+  <title>垃圾分类小达人 · 环保冒险加载中</title>
+  <style>
+:root{--w:1672;--h:941;--deep:#006a75;--orange:#ffa629;--mint:#49ebbc;--cream:#fffbea;--shadow:#075d76}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:#69ccc2}
+#viewport{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden;background:#80d4ca}
+#frame{position:relative;flex:none;overflow:hidden;box-shadow:0 7px 32px #005d581b}
+#stage{position:absolute;left:0;top:0;width:1672px;height:941px;overflow:hidden;transform-origin:0 0;isolation:isolate}
+.scene{position:absolute;inset:0;width:1672px;height:941px;user-select:none;pointer-events:none;display:block;image-rendering:auto}
+/* The only altered background regions are the truck extraction hole and progress UI. */
+#rail{position:absolute;z-index:3;left:473px;top:769px;width:602px;height:70px;border:5px solid #fff;
+ border-radius:55px;background:linear-gradient(180deg,#e7ffff 0%,#d9ffff 38%,#e9fffc 100%);
+ box-shadow:0 0 0 3px #008e9a,0 6px 0 #168f95,0 10px 9px #007c743d,inset 0 0 0 2px #4cdeef;pointer-events:none}
+.rail-inner{position:absolute;left:8px;right:8px;top:9px;bottom:8px;border-radius:40px;
+ background:linear-gradient(180deg,#005f6d,#0e9192 47%,#006d74);
+ box-shadow:inset 0 4px 8px #0049509a,0 0 0 2px #45cbdb;overflow:hidden}
+.fill{position:absolute;left:0;top:0;bottom:0;width:0%;max-width:100%;border-radius:40px;
+ background:linear-gradient(180deg,#b9ff55 0%,#78f867 30%,#3ce6a1 78%,#16dcb6 100%);
+ box-shadow:inset 1px 3px 2px #ffffffa1,inset 0 -3px 3px #16ad9199,0 0 11px #d5ff88ad;
+ overflow:hidden;transition:none}
+.stripe-flow{position:absolute;inset:0;width:calc(100% + 160px);
+ background:repeating-linear-gradient(128deg,transparent 0,transparent 22px,#ffffff36 22px,#ffffff36 39px,transparent 39px,transparent 51px);
+ animation:flow 1.9s linear infinite}
+.fill-highlight{position:absolute;top:4px;left:3%;right:6%;height:5px;border-radius:99px;background:#ffffff82}
+.rail-flare{position:absolute;inset:0;border-radius:40px;box-shadow:inset 0 1px 2px #fff9;pointer-events:none}
+#truck{position:absolute;z-index:7;left:472px;top:738px;width:169px;height:114px;pointer-events:none;will-change:transform;filter:drop-shadow(0 2px 1px #05726a35)}
+.truck-bob{position:relative;width:100%;height:100%;transform-origin:50% 80%}
+#truck img{position:absolute;inset:0;width:169px;height:114px;object-fit:contain;user-select:none}
+#truck.moving .truck-bob{animation:truckBounce .38s ease-in-out infinite}
+.wheel{display:none;position:absolute;width:13px;height:13px;border-radius:50%;border:2px dashed #eaf2e9;mix-blend-mode:soft-light;animation:wheelSpin .52s linear infinite}
+#truck.moving .wheel{display:block}
+.wheel-a{left:49px;top:83px}.wheel-b{left:93px;top:85px}.wheel-c{left:132px;top:88px}
+#number-mask{position:absolute;z-index:8;left:1086px;top:764px;width:133px;height:66px;
+ border-radius:22px;background:linear-gradient(100deg,#fafff8,#ffffff 30%,#fffefd);
+ display:flex;align-items:center;justify-content:center;pointer-events:none}
+#number{color:#006b6b;font-size:54px;font-weight:1000;line-height:1;letter-spacing:-3px;
+ -webkit-text-stroke:.4px #087a77;text-shadow:1px 2px 0 #d9fff1;font-variant-numeric:tabular-nums}
+#fact-replace{position:absolute;z-index:5;left:520px;top:850px;width:613px;height:47px;
+ background:linear-gradient(90deg,#f6fff0 0%,#fafff7 67%,#fffff8 100%);
+ display:flex;align-items:center;padding:0 4px;overflow:hidden;pointer-events:none;opacity:0;border-radius:3px}
+#fact-replace.visible{opacity:1}
+#fact-text{font-weight:850;font-size:19px;line-height:1.3;white-space:nowrap;color:#087d80;
+ overflow:hidden;text-overflow:clip;max-width:100%;display:block;transform:translateZ(0)}
+#fact-replace.pulse #fact-text{animation:factSlide .26s both}
+.hit{position:absolute;z-index:9;padding:0;border:0;appearance:none;background:none;color:transparent;cursor:pointer;touch-action:manipulation}
+.hit:focus-visible{outline:4px solid #fff16f;outline-offset:0;border-radius:16px;box-shadow:0 0 0 7px #047a80}
+#fact-next{left:1135px;top:844px;width:161px;height:56px;border-radius:28px}
+#bin-recycle{left:496px;top:510px;width:232px;height:233px}
+#bin-wet{left:740px;top:510px;width:231px;height:233px}
+#bin-hazard{left:985px;top:510px;width:233px;height:233px}
+#bin-dry{left:1231px;top:510px;width:231px;height:233px}
+.bin-hit{border-radius:25px}
+.bin-hit:hover{box-shadow:inset 0 0 30px #ffffff28,0 0 0 3px #fff9}
+.bin-hit:active{transform:translateY(2px)}
+#sound-control{position:absolute;z-index:11;right:24px;top:24px;display:flex;align-items:center;gap:7px;
+ padding:8px 14px;border:3px solid #fff;background:#fff8da;color:#157c80;border-radius:30px;
+ font:900 15px/1.1 "Microsoft YaHei","PingFang SC",sans-serif;
+ box-shadow:0 5px 0 #078c87,0 6px 12px #00475b5a;cursor:pointer;transition:transform .18s,box-shadow .18s}
+#sound-control:hover{transform:translateY(-3px);box-shadow:0 8px 0 #078c87,0 9px 14px #00475b5a}
+#sound-control:active{transform:translateY(4px);box-shadow:0 1px 0 #078c87}
+#sound-control:focus-visible{outline:4px solid #ffda1c;outline-offset:3px}
+#sound-control[data-on="true"]{background:#ffffa4;color:#06756f}
+#sound-control .sound-wave{opacity:.42}
+#sound-control[data-on="true"] .sound-wave{opacity:1}
+#effects{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.spark{position:absolute;font-weight:900;color:#fff8a3;opacity:.75;text-shadow:0 2px 0 #1eafbd,0 0 5px white;animation:sparkle 2.3s ease-in-out infinite}
+.mascot-spark{left:435px;top:505px;font-size:34px;animation-delay:.1s}
+.mascot-spark-two{left:379px;top:477px;font-size:18px;color:#fefafd;animation-delay:1.2s}
+.bin-spark{font-size:20px;animation:binPing 2.6s ease-in-out infinite}
+.s-blue{left:662px;top:485px;color:#fffde3;animation-delay:0s}
+.s-brown{left:898px;top:486px;color:#fef0a4;animation-delay:.65s}
+.s-red{left:1161px;top:482px;color:#fff6a2;animation-delay:1.3s}
+.s-gray{left:1401px;top:489px;color:#ddfdff;animation-delay:1.95s}
+.float-leaf{position:absolute;width:20px;height:11px;border-radius:90% 5% 90% 5%;background:#dfff8d;
+ box-shadow:inset -2px -2px 0 #6ab87e,0 1px 2px #1d9d8380;opacity:.78;animation:leafDrift 7s linear infinite}
+.leaf-a{left:121px;top:222px;transform:rotate(16deg);animation-delay:0s}
+.leaf-b{left:1310px;top:196px;width:16px;animation-delay:2.2s}
+.leaf-c{left:1540px;top:414px;width:14px;animation-delay:4.4s}
+.water-gleam{position:absolute;width:39px;height:3px;border-radius:99px;background:#f5ffff;box-shadow:0 0 8px #fff;opacity:0;animation:waterGlint 5.5s ease-in-out infinite}
+.g1{left:807px;top:410px}.g2{left:1175px;top:408px;animation-delay:1.8s}.g3{left:1359px;top:391px;animation-delay:3.7s}
+#confetti{position:absolute;inset:0;z-index:19;pointer-events:none}
+#complete{position:absolute;inset:0;z-index:20;display:grid;place-items:center;
+ background:#006b7370;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .44s ease,visibility .44s}
+#complete.open{opacity:1;visibility:visible;pointer-events:auto}
+.finish-card{position:relative;width:560px;max-width:calc(100% - 48px);padding:31px 30px 32px;
+ border:9px solid white;outline:5px solid #068d92;border-radius:53px 37px 58px 37px;
+ background:linear-gradient(152deg,#fffee9 0%,#fff7ca 72%,#fff1c7 100%);
+ box-shadow:0 15px 0 #066d7e,0 24px 32px #002f4563;text-align:center;transform:rotate(-2deg) scale(.86);
+ transition:transform .4s cubic-bezier(.2,1.4,.4,1)}
+#complete.open .finish-card{transform:rotate(-2deg) scale(1)}
+.finish-star{position:absolute;right:-26px;top:-29px;color:#ffcf00;font-size:64px;-webkit-text-stroke:3px white;text-shadow:4px 3px 0 #f9863b}
+.finish-eyebrow{margin:2px 0 3px;font-weight:1000;color:#1d9a92;font-size:23px}
+#finish-heading{margin:4px 0 8px;font-weight:1000;font-size:70px;line-height:1.18;color:#ff8f25;
+ -webkit-text-stroke:2px #fff;text-shadow:4px 5px 0 #068a94,0 9px 0 #fff}
+.finish-description{font-size:23px;font-weight:850;color:#087c82;margin:3px 0 23px}
+.start-button{display:inline-flex;align-items:center;gap:14px;border:6px solid #fff;border-radius:25px 42px 24px 37px;
+ padding:13px 33px;color:#8b3b0a;font-size:32px;font-weight:1000;font-family:inherit;
+ background:linear-gradient(150deg,#ffef6b 0%,#ffc533 52%,#ff8f2c 100%);
+ box-shadow:0 7px 0 #d77519,0 10px 0 4px #087e8c;cursor:pointer;transition:transform .14s,box-shadow .14s}
+.start-button:hover{transform:rotate(-2deg) translateY(-4px);box-shadow:0 11px 0 #d77519,0 14px 0 4px #087e8c}
+.start-button:active{transform:translateY(6px);box-shadow:0 1px 0 #d77519,0 4px 0 4px #087e8c}
+.start-button:focus-visible{outline:5px solid #3b87e8;outline-offset:7px}
+.finish-hint{font-size:15px;font-weight:750;color:#37a29a;margin:22px 0 0}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#debug{position:fixed;z-index:99;bottom:13px;left:13px;display:none;gap:9px;align-items:center;
+ background:#ffffef;color:#07585c;border:2px solid #fff;padding:9px 13px;border-radius:14px;
+ box-shadow:0 5px 17px #004b4c5e;font:14px system-ui,sans-serif}
+#debug.visible{display:flex}#debug input{width:180px}#debug button{cursor:pointer}
+/* Snapshot for byte-equal acceptance test: no overlays, no animations, no UI except the approved master. */
+/* Snapshot artwork is assigned by app.js, avoiding a duplicated embedded image. */
+body.snapshot #stage>:not(.scene){display:none!important}
+@keyframes flow{from{transform:translateX(-65px)}to{transform:translateX(0)}}
+@keyframes truckBounce{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(-.3deg)}}
+@keyframes wheelSpin{to{transform:rotate(360deg)}}
+@keyframes sparkle{0%,100%{opacity:.15;transform:scale(.66) rotate(-8deg)}50%{opacity:1;transform:scale(1.24) rotate(9deg)}}
+@keyframes binPing{0%,100%{opacity:.05;transform:translateY(4px) scale(.65)}35%{opacity:.9;transform:translateY(-7px) scale(1.2)}60%{opacity:0;transform:translateY(-13px) scale(.7)}}
+@keyframes waterGlint{0%,75%,100%{opacity:0;transform:translateX(-12px) scaleX(.4)}30%{opacity:.88;transform:translateX(15px) scaleX(1.25)}}
+@keyframes leafDrift{0%{opacity:0;transform:translate(0,-18px) rotate(12deg)}18%{opacity:.8}80%{opacity:.7}100%{opacity:0;transform:translate(45px,70px) rotate(225deg)}}
+@keyframes factSlide{from{opacity:.1;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.stripe-flow,.truck-bob,.spark,.float-leaf,.water-gleam,.wheel{animation:none!important}#complete,.finish-card,.start-button{transition:none!important}#effects{display:none}}
 
-  <!-- R30 开局预加载动画（形象跟随管理员编辑的引导员形象，可替换） -->
-  <div id="boot" aria-hidden="true">
-    <div class="boot-title">垃圾分类小达人</div>
-    <div class="boot-orange" id="boot-orange">🍊</div>
-    <div class="boot-deco"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="boot-marks">
-      <img src="assets/marks/mark-recyclable-new.jpg" alt="可回收物">
-      <img src="assets/marks/mark-wet-new.jpg" alt="厨余垃圾">
-      <img src="assets/marks/mark-hazardous-new.jpg" alt="有害垃圾">
-      <img src="assets/marks/mark-dry-new.jpg" alt="其他垃圾">
+/* =============================================================
+ * V3: substantive motion with actual extracted art, NOT recreated icons.
+ * These sprites were extracted pixel-for-pixel from the approved master.
+ * The original RGB artwork is retained; the background plate is independently reconstructed.
+ * ============================================================= */
+#art-characters{position:absolute;inset:0;z-index:4;pointer-events:none}
+.character-sprite{display:block;position:absolute;object-fit:contain;user-select:none;will-change:transform;transform-origin:50% 92%}
+#mascot-sprite{left:8px;top:316px;width:485px;height:550px;transform-origin:49% 86%;animation:mascotHop 3.65s ease-in-out infinite}
+.bin-sprite{animation:binBoing 4.4s cubic-bezier(.34,.04,.27,1) infinite}
+#sprite-blue{left:484px;top:477px;width:254px;height:285px;animation-delay:.26s}
+#sprite-brown{left:730px;top:475px;width:254px;height:286px;animation-delay:1.36s}
+#sprite-red{left:968px;top:487px;width:277px;height:276px;animation-delay:2.46s}
+#sprite-black{left:1215px;top:487px;width:283px;height:280px;animation-delay:3.56s}
+@keyframes mascotHop{
+  0%,7%,43%,100%{transform:translateY(0)}
+  20%{transform:translateY(-14px)}
+  28%{transform:translateY(-4px)}
+  35%{transform:translateY(0)}
+}
+@keyframes binBoing{
+  0%,13%,45%,100%{transform:translateY(0)}
+  26%{transform:translateY(-10px)}
+  35%{transform:translateY(-2px)}
+  41%{transform:translateY(0)}
+}
+/* Controls live in clear sky, fully outside the approved sorting labels. */
+#audio-tools{position:absolute;top:24px;right:173px;z-index:12;display:flex;gap:9px;align-items:center}
+#music-control{display:flex;align-items:center;gap:6px;padding:9px 14px;
+ border:3px solid #fff;border-radius:40px;background:#ffec9e;color:#146c79;
+ box-shadow:0 5px 0 #0a9a9b,0 8px 12px #005f7760;cursor:pointer;
+ font:900 15px/1.1 "Microsoft YaHei","PingFang SC",sans-serif;transition:transform .2s,box-shadow .2s}
+#music-control>span:first-child{font-size:22px;line-height:12px;color:#ef749b}
+#music-control:hover{transform:translateY(-3px);box-shadow:0 8px 0 #0a9a9b,0 10px 15px #005f7760}
+#music-control:active{transform:translateY(3px);box-shadow:0 2px 0 #0a9a9b}
+#music-control[data-on="true"]{background:#f8ff98;color:#087967}
+#music-control[data-on="true"]>span:first-child{animation:musicalFloat 1s ease-in-out infinite}
+#volume-wrap{height:39px;display:flex;align-items:center;gap:4px;background:#fffff1ed;
+ border:2px solid white;border-radius:25px;padding:4px 10px;color:#14949a;
+ box-shadow:0 3px 0 #189a94;font-size:17px}
+#music-volume{width:71px;height:19px;cursor:pointer;accent-color:#fb8b31}
+#audio-tools button:focus-visible,#music-volume:focus-visible{outline:4px solid #ffc833;outline-offset:4px}
+#ambient-layer{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.orbit-star{position:absolute;color:#fffdd3;filter:drop-shadow(0 0 6px #ffe771);
+  -webkit-text-stroke:1px #fefaff;font-size:35px;animation:orbitStar 3.2s ease-in-out infinite;opacity:0}
+.orbit-a{left:424px;top:377px;animation-delay:0s}
+.orbit-b{left:76px;top:474px;font-size:21px;animation-delay:.72s}
+.orbit-c{left:452px;top:651px;font-size:18px;animation-delay:1.9s}
+.orbit-d{left:363px;top:303px;font-size:24px;animation-delay:2.75s}
+.shine-dash{position:absolute;height:4px;width:56px;opacity:0;
+ border-radius:90%;background:#fdffff;box-shadow:0 0 13px 5px #c7fff7ad;
+ animation:riverDash 6s ease-in-out infinite}
+.shine-1{left:722px;top:414px;animation-delay:.3s}
+.shine-2{left:974px;top:393px;animation-delay:1.4s;width:37px}
+.shine-3{left:1137px;top:432px;animation-delay:2.9s}
+.shine-4{left:1344px;top:406px;animation-delay:3.7s;width:45px}
+.shine-5{left:594px;top:430px;animation-delay:5.1s;width:33px}
+.petal-fall{--dx:42px;position:absolute;top:-30px;width:17px;height:12px;pointer-events:none;
+ background:linear-gradient(120deg,#e9ff7c 0%,#74dd70 53%,#2db685 100%);border-radius:100% 5% 100% 6%;
+ box-shadow:0 1px 2px #176f4960;opacity:0;animation:petalFall 7.8s linear infinite}
+.fall-1{left:139px;animation-delay:0s;--dx:105px}
+.fall-2{left:357px;animation-delay:-3.2s;--dx:-52px;width:11px;height:8px}
+.fall-3{left:511px;animation-delay:-6s;--dx:93px}
+.fall-4{left:1050px;animation-delay:-2.1s;--dx:-85px}
+.fall-5{left:1260px;animation-delay:-4.5s;--dx:66px}
+.fall-6{left:1525px;animation-delay:-1s;--dx:-92px}
+.fall-7{left:743px;animation-delay:-5.3s;--dx:44px;width:12px;height:8px}
+.fall-8{left:920px;animation-delay:-7s;--dx:-45px;width:12px;height:8px}
+.mini-bubble{position:absolute;bottom:203px;width:16px;height:16px;border:3px solid #ffffffc7;border-radius:50%;
+ box-shadow:inset 0 0 2px #fff,0 0 5px #58f4f3;opacity:0;animation:popBubble 4.8s ease-in infinite}
+.bubble-1{left:593px;animation-delay:0s}.bubble-2{left:850px;animation-delay:.95s;width:11px;height:11px}
+.bubble-3{left:1091px;animation-delay:1.9s}.bubble-4{left:1363px;animation-delay:2.85s;width:12px;height:12px}
+.bubble-5{left:431px;animation-delay:3.8s}
+.click-star{position:absolute;pointer-events:none;color:#fff2a1;text-shadow:1px 3px 0 #ff8b38,0 0 12px #fff;
+ animation:clickBurst .8s ease-out forwards;font-size:27px;font-weight:900;z-index:17}
+.bubble-caption{position:absolute;pointer-events:none;padding:7px 13px;border:3px solid white;border-radius:20px 9px 21px 13px;
+ background:#ffe66b;color:#16788a;font-size:20px;font-weight:1000;box-shadow:0 4px 0 #e78c2c,0 7px 8px #045f706e;
+ z-index:16;animation:popCaption 1.1s ease-out both;white-space:nowrap}
+@keyframes musicalFloat{0%,100%{transform:rotate(-12deg) translateY(1px)}50%{transform:rotate(12deg) translateY(-2px)}}
+@keyframes orbitStar{0%,100%{opacity:0;transform:rotate(-12deg) scale(.5)}35%,56%{opacity:1;transform:rotate(13deg) scale(1.25)}83%{opacity:0;transform:rotate(22deg) scale(.8)}}
+@keyframes riverDash{0%,100%{opacity:0;transform:translateX(-30px) scaleX(.3)}28%{opacity:.87}55%{opacity:.53;transform:translateX(53px) scaleX(1.2)}82%{opacity:0;transform:translateX(75px) scaleX(.5)}}
+@keyframes petalFall{0%{opacity:0;transform:translate3d(0,0,0) rotate(3deg)}14%{opacity:.85}77%{opacity:.8}100%{opacity:0;transform:translate3d(var(--dx),600px,0) rotate(420deg)}}
+@keyframes popBubble{0%,100%{opacity:0;transform:translateY(0) scale(.4)}18%{opacity:.8}75%{opacity:.6}95%{opacity:0;transform:translateY(-135px) scale(1.4)}}
+@keyframes clickBurst{0%{opacity:0;transform:translate(0,12px) scale(.45) rotate(-25deg)}30%{opacity:1}100%{opacity:0;transform:translate(var(--tx,40px),var(--ty,-55px)) rotate(65deg) scale(1.3)}}
+@keyframes popCaption{0%{opacity:0;transform:translateY(18px) rotate(-9deg) scale(.45)}30%{opacity:1;transform:translateY(-22px) rotate(4deg) scale(1.09)}60%{opacity:1;transform:translateY(-21px) rotate(-2deg)}100%{opacity:0;transform:translateY(-70px) scale(.9)}}
+/* A clicked bin visibly reacts, while its source artwork remains unmodified. */
+.bin-sprite.cheer{animation:binCheer .7s ease-in-out both!important}
+#mascot-sprite.cheer{animation:mascotCheer .8s ease-in-out both!important}
+@keyframes binCheer{0%,100%{transform:translateY(0)}25%{transform:translateY(-20px)}55%{transform:translateY(-3px)}80%{transform:translateY(-10px)}}
+@keyframes mascotCheer{0%,100%{transform:translateY(0)}34%{transform:translateY(-24px)}60%{transform:translateY(0)}83%{transform:translateY(-8px)}}
+body.snapshot #audio-tools,body.snapshot #art-characters,body.snapshot #ambient-layer{display:none!important}
+@media(prefers-reduced-motion:reduce){
+ .character-sprite,.orbit-star,.shine-dash,.petal-fall,.mini-bubble,.click-star,.bubble-caption,#music-control>span:first-child{animation:none!important}
+ .bubble-caption,.click-star,.orbit-star,.petal-fall,.mini-bubble,.shine-dash{display:none!important}
+}
+
+/* Ground shadows are independent of character pixels. */
+#ground-shadows{position:absolute;inset:0;z-index:2;pointer-events:none}
+.ground-shadow{position:absolute;border-radius:50%;background:radial-gradient(ellipse,#77501b55 0%,#77501b25 52%,transparent 72%);transform-origin:center;animation:binShadow 4.4s cubic-bezier(.34,.04,.27,1) infinite}
+#shadow-mascot{left:235px;top:825px;width:135px;height:29px;animation:mascotShadow 3.65s ease-in-out infinite}
+#shadow-blue{left:494px;top:732px;width:233px;height:28px;animation-delay:.26s}
+#shadow-brown{left:738px;top:732px;width:226px;height:28px;animation-delay:1.36s}
+#shadow-red{left:977px;top:732px;width:246px;height:28px;animation-delay:2.46s}
+#shadow-black{left:1221px;top:736px;width:250px;height:28px;animation-delay:3.56s}
+@keyframes mascotShadow{0%,7%,43%,100%{transform:scale(1);opacity:.75}20%{transform:scale(.78);opacity:.38}28%{transform:scale(.92);opacity:.62}}
+@keyframes binShadow{0%,13%,45%,100%{transform:scale(1);opacity:.8}26%{transform:scale(.85);opacity:.42}35%{transform:scale(.97);opacity:.7}}
+.ground-shadow.cheer{animation:cheerShadow .7s ease-in-out both!important}
+#shadow-mascot.cheer{animation-duration:.8s!important}
+@keyframes cheerShadow{0%,100%{transform:scale(1);opacity:.8}25%,34%{transform:scale(.74);opacity:.3}60%{transform:scale(.97);opacity:.7}80%{transform:scale(.85);opacity:.5}}
+#mascot-hit{left:12px;top:323px;width:465px;height:525px;border-radius:50%}
+#replay{border:0;border-radius:18px;background:#e8fff3;color:#087a78;font-family:inherit;font-size:18px;font-weight:800;line-height:1.2;padding:8px 20px;cursor:pointer;margin-top:6px}
+#replay:focus-visible{outline:3px solid #ffa629;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.ground-shadow{animation:none!important}}
+
+  </style>
+  <script>window.GarbageLoadingConfig={nextUrl:"hall.html",preloadManifest:[
+{"url":"assets/account-soft.mp3","kind":"audio","weight":789150},{"url":"assets/bin-black.webp","kind":"image","weight":49024},{"url":"assets/bin-blue.webp","kind":"image","weight":59182},{"url":"assets/bin-brown.webp","kind":"image","weight":56430},{"url":"assets/bin-red.webp","kind":"image","weight":59210},{"url":"assets/classroom-calm.mp3","kind":"audio","weight":732725},{"url":"assets/eco-pop-adventure.mp3","kind":"audio","weight":449108},{"url":"assets/hall-adventure.mp3","kind":"audio","weight":550077},{"url":"assets/ludo-adventure.mp3","kind":"audio","weight":592291},{"url":"assets/mascot.webp","kind":"image","weight":149886},{"url":"assets/match-playful.mp3","kind":"audio","weight":496996},{"url":"assets/quiz-focus.mp3","kind":"audio","weight":641610},{"url":"assets/runner-energy.mp3","kind":"audio","weight":466903},{"url":"assets/scene-animated.webp","kind":"image","weight":2158070},{"url":"assets/shanghai-guide.jpg","kind":"image","weight":330114},{"url":"assets/shop-cozy.mp3","kind":"audio","weight":699706},{"url":"assets/sorter-play.mp3","kind":"audio","weight":522074},{"url":"assets/trash/apple-core.png","kind":"image","weight":1040378},{"url":"assets/trash/banana-peel.png","kind":"image","weight":796516},{"url":"assets/trash/bandage.png","kind":"image","weight":840575},{"url":"assets/trash/big-bone.png","kind":"image","weight":742265},{"url":"assets/trash/bread.png","kind":"image","weight":1294540},{"url":"assets/trash/cabbage-leaf.png","kind":"image","weight":1158876},{"url":"assets/trash/cardboard.png","kind":"image","weight":1277668},{"url":"assets/trash/ceramic-shard.png","kind":"image","weight":1125938},{"url":"assets/trash/cigarette-butt.png","kind":"image","weight":815152},{"url":"assets/trash/disinfectant.png","kind":"image","weight":773850},{"url":"assets/trash/egg-shell.png","kind":"image","weight":950263},{"url":"assets/trash/expired-pills.png","kind":"image","weight":1403488},{"url":"assets/trash/glass-bottle.png","kind":"image","weight":641015},{"url":"assets/trash/hard-shell.png","kind":"image","weight":1504149},{"url":"assets/trash/lamp-tube.png","kind":"image","weight":512341},{"url":"assets/trash/metal-can.png","kind":"image","weight":1125427},{"url":"assets/trash/newspaper.png","kind":"image","weight":1134741},{"url":"assets/trash/paint-can.png","kind":"image","weight":1614476},{"url":"assets/trash/plastic-bottle.png","kind":"image","weight":716395},{"url":"assets/trash/rechargeable-battery.png","kind":"image","weight":815823},{"url":"assets/trash/shirt.png","kind":"image","weight":1251759},{"url":"assets/trash/shrimp-shell.png","kind":"image","weight":1133615},{"url":"assets/trash/thermometer.png","kind":"image","weight":607534},{"url":"assets/trash/used-tissue.png","kind":"image","weight":930745},{"url":"assets/trash/corn-cob.png","kind":"image","weight":420000},{"url":"assets/truck-cutout.webp","kind":"image","weight":24992},{"url":"hall.html","kind":"document","weight":1497},{"url":"hall.css","kind":"style","weight":53957},{"url":"candy.css","kind":"style","weight":33290},{"url":"shop.css","kind":"style","weight":9876},{"url":"game.css","kind":"style","weight":41342},{"url":"exhibition-ui.css","kind":"style","weight":9000},{"url":"content.js","kind":"script","weight":21059},{"url":"trash-data.js","kind":"script","weight":19283},{"url":"quiz-bank.js","kind":"script","weight":89712},{"url":"core.js","kind":"script","weight":15134},{"url":"effects.js","kind":"script","weight":3716},{"url":"game-engine.js","kind":"script","weight":11199},{"url":"games.js","kind":"script","weight":40416},{"url":"museum.js","kind":"script","weight":9000},{"url":"hall.js","kind":"script","weight":104124}]};</script>
+  <script defer src="loading.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script></head>
+<body>
+  <main id="viewport" aria-label="垃圾分类小达人游戏加载页面">
+    <div id="frame">
+      <div id="stage">
+        <!-- snapshot mode shows ONLY this byte-locked image. Dynamic mode uses a truck-free scene. -->
+        <img id="scene" class="scene" src="assets/scene-animated.webp" alt="垃圾分类小达人：上海江畔公园场景，橙色双叶环保吉祥物手拿蓝色垃圾袋与塑料瓶，四种垃圾分类桶。" draggable="false">
+        <!-- Original character pixels with cleaned alpha; empty background is a separate asset. -->
+        <div id="ground-shadows" aria-hidden="true"><i class="ground-shadow" id="shadow-mascot"></i><i class="ground-shadow" id="shadow-blue"></i><i class="ground-shadow" id="shadow-brown"></i><i class="ground-shadow" id="shadow-red"></i><i class="ground-shadow" id="shadow-black"></i></div>
+        <div id="art-characters" aria-hidden="true">
+          <img class="character-sprite" id="mascot-sprite" src="assets/mascot.webp" alt="" draggable="false">
+          <img class="character-sprite bin-sprite" id="sprite-blue" src="assets/bin-blue.webp" alt="" draggable="false">
+          <img class="character-sprite bin-sprite" id="sprite-brown" src="assets/bin-brown.webp" alt="" draggable="false">
+          <img class="character-sprite bin-sprite" id="sprite-red" src="assets/bin-red.webp" alt="" draggable="false">
+          <img class="character-sprite bin-sprite" id="sprite-black" src="assets/bin-black.webp" alt="" draggable="false">
+        </div>
+        <!-- Progress graphic: bounded to the approved existing progress-bar footprint. -->
+        <div id="rail" aria-label="加载进度" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="加载中 0%">
+          <div class="rail-inner">
+            <div id="fill" class="fill"><div class="stripe-flow"></div><div class="fill-highlight"></div></div>
+            <div class="rail-flare" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div id="truck" aria-hidden="true">
+          <div class="truck-bob">
+            <img src="assets/truck-cutout.webp" alt="" draggable="false">
+            <i class="wheel wheel-a"></i><i class="wheel wheel-b"></i><i class="wheel wheel-c"></i>
+          </div>
+        </div>
+        <div id="number-mask"><span id="number">0%</span></div>
+        <!-- Facts: the right-hand '换一条' text is part of the locked illustration and never gets covered. -->
+        <div id="fact-replace"><span id="fact-text"></span></div>
+        <button id="fact-next" class="hit" type="button" aria-label="换一条垃圾分类小知识" title="换一条"></button>
+        <button id="mascot-hit" class="hit" type="button" aria-label="和环保吉祥物打个招呼"></button>
+        <button id="bin-recycle" class="hit bin-hit" type="button" aria-label="可回收物分类知识"></button>
+        <button id="bin-wet" class="hit bin-hit" type="button" aria-label="湿垃圾分类知识"></button>
+        <button id="bin-hazard" class="hit bin-hit" type="button" aria-label="有害垃圾分类知识"></button>
+        <button id="bin-dry" class="hit bin-hit" type="button" aria-label="干垃圾分类知识"></button>
+        <audio id="bgm" data-src="assets/eco-pop-adventure.mp3" loop preload="none" aria-hidden="true"></audio>
+        <div id="audio-tools" role="group" aria-label="声音控制">
+          <button id="music-control" type="button" aria-label="开启背景音乐" aria-pressed="false" title="原创环保糖果街机配乐（需点击开启）"><span aria-hidden="true">♫</span><span id="music-label">开启音乐</span></button>
+          <label id="volume-wrap" title="背景音乐音量"><span aria-hidden="true">♪</span><input id="music-volume" type="range" min="0" max="100" value="36" aria-label="背景音乐音量"></label>
+        </div>
+        <button id="sound-control" type="button" title="点击启用或关闭音效" aria-label="开启音效" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Z" stroke="currentColor" fill="none" stroke-width="2" stroke-linejoin="round"/><path class="sound-wave" d="M16 9c2 2 2 4 0 6m3-9c4 4 4 8 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span id="sound-label">开启音效</span>
+        </button>
+        <div id="effects" aria-hidden="true">
+          <span class="water-gleam g1"></span><span class="water-gleam g2"></span><span class="water-gleam g3"></span>
+          <span class="float-leaf leaf-a"></span><span class="float-leaf leaf-b"></span><span class="float-leaf leaf-c"></span>
+          <span class="spark mascot-spark">✧</span><span class="spark mascot-spark-two">✦</span>
+          <span class="spark bin-spark s-blue">✧</span><span class="spark bin-spark s-brown">✦</span>
+          <span class="spark bin-spark s-red">✧</span><span class="spark bin-spark s-gray">✦</span>
+        </div>
+        <div id="ambient-layer" aria-hidden="true">
+          <span class="orbit-star orbit-a">✦</span><span class="orbit-star orbit-b">✧</span><span class="orbit-star orbit-c">★</span>
+          <span class="orbit-star orbit-d">✧</span>
+          <span class="shine-dash shine-1"></span><span class="shine-dash shine-2"></span><span class="shine-dash shine-3"></span>
+          <span class="shine-dash shine-4"></span><span class="shine-dash shine-5"></span>
+          <span class="petal-fall fall-1"></span><span class="petal-fall fall-2"></span><span class="petal-fall fall-3"></span>
+          <span class="petal-fall fall-4"></span><span class="petal-fall fall-5"></span><span class="petal-fall fall-6"></span>
+          <span class="petal-fall fall-7"></span><span class="petal-fall fall-8"></span>
+          <span class="mini-bubble bubble-1"></span><span class="mini-bubble bubble-2"></span><span class="mini-bubble bubble-3"></span>
+          <span class="mini-bubble bubble-4"></span><span class="mini-bubble bubble-5"></span>
+        </div>
+        <canvas id="confetti" width="1672" height="941" aria-hidden="true"></canvas>
+        <section id="complete" role="dialog" aria-modal="true" aria-labelledby="finish-heading" aria-hidden="true">
+          <div class="finish-card">
+            <span class="finish-star" aria-hidden="true">✦</span>
+            <p class="finish-eyebrow">✿ 垃圾分类小达人 ✿</p>
+            <h2 id="finish-heading">准备出发！</h2>
+            <p class="finish-description">小车已到站，环保挑战马上开始！</p>
+            <button id="start" class="start-button" type="button"><span>★ 开始挑战</span><span aria-hidden="true">➜</span></button>
+            <p class="finish-hint">点击出发 · 一起守护上海</p>
+            <button id="replay" type="button">再看一次</button>
+          </div>
+        </section>
+        <div id="live" class="visually-hidden" aria-live="polite"></div>
+      </div>
     </div>
-    <div class="boot-bar"><i id="boot-bar-fill"></i></div>
-    <div class="boot-tip" id="boot-tip">可回收垃圾是：旧报纸、易拉罐、塑料瓶…</div>
-    <div id="boot-sort-anim" class="is-pc" aria-hidden="true"></div>
-    <div id="boot-runner-egg" class="is-pc" aria-hidden="true"></div>
-  </div>
-
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg id="brand-logo-default" viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="13.2" r="7.4" fill="#F97316"/><circle cx="12" cy="13.2" r="7.4" fill="none" stroke="#EA580C" stroke-width="0.7"/><ellipse cx="9.7" cy="11" rx="2.1" ry="1.3" fill="#FDBA74" opacity="0.85"/><path d="M12 6.2c-.3-2.3.8-3.8 1.8-4.6 1.7 1.3 1.8 2.9 1.4 4.3-.9.3-2.1.4-3.2.3z" fill="#16A34A"/><circle cx="12.4" cy="5.9" r="1" fill="#22C55E"/></svg>
-          <img id="brand-logo" class="is-hidden" alt="标题图标">
-        </span>
-        <span class="brand-title">垃圾分类小达人</span>
-      </div>
-      <div class="hud">
-        <span class="chip badge-chip" id="chip-badge" title="当前称号">
-          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8L12 2z"/></svg>
-          <span id="badge-name">未佩戴</span>
-        </span>
-        <span class="chip score-chip">
-          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8L12 2z"/></svg>
-          <span id="score-total">0</span>
-        </span>
-        <button class="btn btn-ghost" id="btn-owned" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8L12 2z"/></svg>
-          已拥有
-        </button>
-        <button class="btn btn-ghost" id="btn-shop" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 5h2l1.2 2.5H19a1 1 0 0 1 .9 1.4l-2.5 6A1 1 0 0 1 16.5 15H9l-1 2h10v2H8a1 1 0 0 1-.9-1.4l1-2-.9-1.9L5 7H3V5h1zm5.5 9h6.7l1.6-4H8.1l1.4 4zM9 19a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm8 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/></svg>
-          商城
-        </button>
-        <button class="btn btn-ghost" id="btn-edit" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm8-2.5l-1.9-.6c-.4-.8-.9-1.5-1.5-2.1l.4-2-2-1-1.4 1.5c-.8-.2-1.7-.3-2.6-.3s-1.8.1-2.6.3L7 3.4l-2 1 .4 2c-.6.6-1.1 1.3-1.5 2.1L2 7.5v2.2l1.9.6a8.4 8.4 0 0 0 0 2.4L2 13.3v2.2l2 1 .4-2c.4.8.9 1.5 1.5 2.1l-.4 2 2 1 1.4-1.5c.8.2 1.7.3 2.6.3s1.8-.1 2.6-.3l1.4 1.5 2-1-.4-2c.6-.6 1.1-1.3 1.5-2.1l1.9.6v-2.2l-1.9-.6a8.4 8.4 0 0 0 0-2.4L20 9.7V7.5z"/></svg>
-          编辑
-        </button>
-        <button class="btn btn-ghost" id="btn-history" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm-1 3h2v5.6l3.8 2.3-1 1.6L11 13.5V7z"/></svg>
-          历史
-        </button>
-        <button class="btn btn-ghost" id="btn-account" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-7 18c0-3.3 3.1-5.5 7-5.5s7 2.2 7 5.5v1H5v-1z"/></svg>
-          <span id="account-label">账户</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main class="stage">
-    <!-- ===== 首页 ===== -->
-    <section class="view" id="view-home" aria-label="首页">
-      <div class="home-hero">
-        <div class="home-splash" id="home-splash">
-          <div class="splash-deco" aria-hidden="true"></div>
-          <div class="splash-mascot"><img id="splash-mascot-img" src="assets/avatar/candy/guide-candy-final.png" alt="小橙子"></div>
-          <h1 class="splash-title" id="splash-title">垃圾分一分<br>地球美十分</h1>
-          <p class="splash-sub" id="splash-sub">四大环保游戏等你来挑战</p>
-          <p class="splash-learn-hint" id="splash-learn-hint">👇 点一点下面的标识，去学习垃圾分类知识</p>
-          <div class="splash-marks" id="splash-marks" aria-label="垃圾分类标准标识（点击学习）">
-            <button class="mark-item is-learn" type="button" data-learn="recyclable"><img src="assets/marks/mark-recyclable-new.jpg" alt="可回收物"><span>可回收</span></button>
-            <button class="mark-item is-learn" type="button" data-learn="kitchen"><img src="assets/marks/mark-wet-new.jpg" alt="厨余垃圾"><span>厨余</span></button>
-            <button class="mark-item is-learn" type="button" data-learn="hazardous"><img src="assets/marks/mark-hazardous-new.jpg" alt="有害垃圾"><span>有害</span></button>
-            <button class="mark-item is-learn" type="button" data-learn="other"><img src="assets/marks/mark-dry-new.jpg" alt="其他垃圾"><span>其他</span></button>
-          </div>
-          <button class="learn-entry-big" type="button">
-            <span class="leb-ico">📚</span>
-            <span class="leb-txt">
-              <span class="leb-title">垃圾分类小课堂</span>
-              <span class="leb-sub">先学后玩，答题更稳！</span>
-            </span>
-            <span class="leb-go">去学习 →</span>
-          </button>
-          <div class="splash-actions">
-            <button class="btn btn-primary btn-lg" id="btn-splash-start" type="button">点击开始游戏</button>
-          </div>
-          <div class="age-hint" title="适龄提示"><b>3+</b><span>适龄提示</span></div>
-        </div>
-        <div class="hero-arena is-hidden" id="hero-arena">
-        <div class="hero-text">
-          <h1 class="hero-title" id="hero-title">垃圾分一分<br>地球美十分</h1>
-          <p class="hero-sub" id="hero-sub">把垃圾拖进正确的桶，答对加分，答错不加分并看答案</p>
-          <div id="redbox-game-name">垃圾分类小达人</div>
-          <div id="greenbox-intro">拖拽分类，答对加分</div>
-          <button id="yellowbox-reset" type="button">重置积分</button>
-          <div class="module-pick" id="module-pick">
-            <button class="module-card is-active" data-module="classic" type="button">
-              <span class="module-emoji">🗑️</span>
-              <span class="module-name" data-f="classic">垃圾分类小达人</span>
-              <span class="module-desc">拖拽分类，答对加分</span>
-            </button>
-            <button class="module-card" data-module="flychess" type="button">
-              <span class="module-emoji">🎲</span>
-              <span class="module-name" data-f="flychess">垃圾分类飞行棋</span>
-              <span class="module-desc">掷骰子答题，冲向终点</span>
-            </button>
-            <button class="module-card" data-module="runner" type="button">
-              <span class="module-emoji">🏃</span>
-              <span class="module-name" data-f="runner">垃圾分类跑酷</span>
-              <span class="module-desc">边跑边吃，对号入座</span>
-            </button>
-            <button class="module-card" data-module="matches" type="button">
-              <span class="module-emoji">🧩</span>
-              <span class="module-name" data-f="matches">垃圾消消乐</span>
-              <span class="module-desc">同品类相连即可消除</span>
-            </button>
-          </div>
-          <button class="learn-entry-big" type="button">
-            <span class="leb-ico">📚</span>
-            <span class="leb-txt">
-              <span class="leb-title">垃圾分类小课堂</span>
-              <span class="leb-sub">先学后玩，答题更稳！</span>
-            </span>
-            <span class="leb-go">去学习 →</span>
-          </button>
-          <div class="hero-actions">
-            <button class="btn btn-primary btn-lg" id="btn-start" type="button">开始分类</button>
-            <button class="btn btn-ghost" id="btn-round-size" type="button">
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm-1 3h2v5.6l3.8 2.3-1 1.6L11 13.5V7z"/></svg>
-              题量 <span id="round-size-label">8</span>
-            </button>
-            <button class="btn btn-ghost" id="btn-reset-home" type="button">重置积分</button>
-          </div>
-          <div class="pending-round is-hidden" id="pending-round">
-            <span class="pending-tip">上局进行中，进度已保留</span>
-            <button class="btn btn-sm btn-primary" id="btn-continue" type="button">继续游戏</button>
-            <button class="btn btn-sm btn-ghost" id="btn-reset-round" type="button">重置进度</button>
-          </div>
-        </div>
-          <div class="home-progress-strip" id="home-progress-strip">
-            <div class="hp-circ"><b id="hp-circ-num">0</b><span>总积分</span></div>
-            <div class="hp-bars">
-              <div class="hp-bar-row"><span>玩法目录</span><b id="hp-cat-num">0/5</b></div>
-              <div class="hp-bar"><i id="hp-cat-fill"></i></div>
-            </div>
-          </div>
-          <div class="home-stats">
-            <div class="stat"><span class="stat-num" id="stat-score">0</span><span class="stat-label">总积分</span></div>
-            <div class="stat"><span class="stat-num" id="stat-best">0</span><span class="stat-label">单局最高</span></div>
-            <div class="stat"><span class="stat-num" id="stat-playcount">0</span><span class="stat-label">游玩次数</span></div>
-          </div>
-        </div>
-        <div class="avatar-home" id="avatar-home" title="小程引导员">
-          <div class="avatar-bubble" id="home-bubble"></div>
-          <img id="avatar-home-img" alt="引导形象">
-          <span class="avatar-name" id="avatar-name">小程 · 引导员（点我换话）</span>
-        </div>
-      </div>
-      <div id="random-play-card">
-        <div id="random-play-title">随机游戏！</div>
-        <button id="btn-random-play" type="button">来一把！</button>
-      </div>
-      <div id="play-catalog" role="button" tabindex="0">
-        <span id="play-catalog-num">0/5</span>
-        <div class="r63-play-catalog-track"><i id="play-catalog-fill"></i></div>
-      </div>
-      <!-- R66 反馈5：拉长 5/5 进度条入口（替代原紫色玩法目录浮块；JS Agent 绑定点击并更新 #r66-cat-num 文字 / #r66-cat-fill 宽度） -->
-      <div id="r66-progress-entry" role="button" tabindex="0" aria-label="游玩进度">
-        <b id="r66-cat-num">0/5</b>
-        <div class="r66-cat-track"><i id="r66-cat-fill"></i></div>
-      </div>
-      <div id="play-catalog-panel" class="is-hidden">
-        <div id="play-catalog-list"></div>
-      </div>
-      <div class="module-cover is-hidden" id="module-cover">
-        <div class="cover-card">
-          <div class="cover-emoji" id="cover-emoji">🎲</div>
-          <h2 class="cover-title" id="cover-title">垃圾分类飞行棋</h2>
-          <p class="cover-desc" id="cover-desc"></p>
-          <div class="cover-actions">
-            <button class="btn btn-primary btn-lg" id="btn-cover-start" type="button">开始游戏</button>
-            <button class="btn btn-ghost" id="btn-cover-back" type="button">返回选模式</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 飞行棋 ===== -->
-    <section class="view is-hidden" id="view-flychess" aria-label="飞行棋">
-      <div class="game-bar">
-        <button class="btn btn-sm btn-ghost" id="btn-fc-home" type="button">
-          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 3 3 10.5V21h6v-6h6v6h6V10.5L12 3z"/></svg>
-          首页
-        </button>
-        <h2 class="sub-title" id="fc-title">垃圾分类飞行棋</h2>
-        <span class="mini-stat" id="fc-turn"></span>
-        <button class="btn btn-ghost btn-sm" id="btn-fc-restart" type="button">重新开始</button>
-        <button class="btn btn-soft btn-sm" id="btn-fc-reset" type="button">重置积分</button>
-      </div>
-      <div class="fc-wrap">
-        <div class="fc-board" id="fc-board"></div>
-        <div class="fc-side">
-          <div class="fc-dice" id="fc-dice">?</div>
-          <div id="fc-arrow-tip" aria-hidden="true"></div>
-          <div class="fc-players" id="fc-players"></div>
-          <div class="fc-rank" id="fc-rank"></div>
-          <div id="fc-guide-avatar"><img id="fc-guide-avatar-img" alt="引导员形象"></div>
-          <div id="fc-rules"></div>
-          <!-- R65 反馈7：四分类规则（四色标注，替代原泛化规则段落） -->
-          <div id="r65-fc-bin-rules" aria-label="四分类投放规则">
-            <div class="r65-bin-rule r65-br-recyclable"><b>可回收物</b><span>→ 放可回收桶</span></div>
-            <div class="r65-bin-rule r65-br-kitchen"><b>厨余垃圾</b><span>→ 放厨余桶</span></div>
-            <div class="r65-bin-rule r65-br-hazardous"><b>有害垃圾</b><span>→ 放有害桶</span></div>
-            <div class="r65-bin-rule r65-br-other"><b>其他垃圾</b><span>→ 放其他桶</span></div>
-          </div>
-          <div id="fc-roll-record"></div>
-        </div>
-      </div>
-      <div class="fc-setup is-hidden" id="fc-setup">
-        <p class="setup-tip">选择游玩模式</p>
-        <div class="setup-actions">
-          <button class="btn btn-primary" data-fc-mode="ai" type="button">👤 单人模式（和电脑对战）</button>
-          <button class="btn btn-ghost" data-fc-mode="multi" type="button">👥 多人模式</button>
-        </div>
-        <div class="setup-actions is-hidden" id="fc-num-actions">
-          <p class="setup-tip">选择本局玩家人数（2~4 人）</p>
-          <button class="btn btn-ghost" data-fc-n="2" type="button">2 人</button>
-          <button class="btn btn-ghost" data-fc-n="3" type="button">3 人</button>
-          <button class="btn btn-ghost" data-fc-n="4" type="button">4 人</button>
-        </div>
-      </div>
-      <div class="fc-question is-hidden" id="fc-question">
-        <p class="fc-q-text" id="fc-q-text"></p>
-        <div class="fc-opts" id="fc-opts"></div>
-        <p class="fc-q-result is-hidden" id="fc-q-result"></p>
-        <button class="btn btn-primary btn-sm is-hidden" id="btn-fc-next" type="button">继续</button>
-        <span id="fc-next-timer"></span>
-      </div>
-      <div id="fc-countdown" class="is-hidden" aria-hidden="true"></div>
-      <div id="fc-turn-banner" class="is-hidden" aria-hidden="true"></div>
-    </section>
-
-    <!-- ===== 跑酷 ===== -->
-    <section class="view is-hidden" id="view-runner" aria-label="跑酷">
-      <div class="game-bar">
-        <button class="btn btn-sm btn-ghost" id="btn-rt-home" type="button">
-          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 3 3 10.5V21h6v-6h6v6h6V10.5L12 3z"/></svg>
-          首页
-        </button>
-        <h2 class="sub-title" id="rt-title">垃圾分类跑酷</h2>
-        <span class="mini-stat" id="rt-time">60s</span>
-        <span class="mini-stat" id="rt-score">0 分</span>
-        <span class="mini-stat" id="rt-meta"></span>
-        <button class="btn btn-ghost btn-sm" id="btn-rt-restart" type="button">重来</button>
-        <button class="btn btn-soft btn-sm" id="btn-rt-reset" type="button">重置积分</button>
-      </div>
-      <div class="rt-stage" id="rt-stage">
-        <canvas id="rt-canvas"></canvas>
-        <div class="rt-target-bar" id="rt-target"></div>
-        <div class="rt-controls">
-          <button class="btn btn-soft btn-sm" id="btn-rt-up" type="button" aria-label="向左换道">◀</button>
-          <button class="rt-jump" id="btn-rt-jump" type="button" aria-label="跳跃">⬆ 跳</button>
-          <button class="btn btn-soft btn-sm" id="btn-rt-down" type="button" aria-label="向右换道">▶</button>
-        </div>
-        <div class="rt-overlay is-hidden" id="rt-overlay"></div>
-      </div>
-      <div class="rt-tip">◀ ▶ 换道，⬆ 跳 跳跃 · 吃到目标垃圾加分，吃错扣分</div>
-    </section>
-
-    <!-- ===== 消消乐 ===== -->
-    <section class="view is-hidden" id="view-matches" aria-label="消消乐">
-      <div class="game-bar">
-        <button class="btn btn-sm btn-ghost" id="btn-mm-home" type="button">
-          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 3 3 10.5V21h6v-6h6v6h6V10.5L12 3z"/></svg>
-          首页
-        </button>
-        <h2 class="sub-title" id="mm-title">垃圾消消乐</h2>
-        <span class="mini-stat" id="mm-level"></span>
-        <span class="mini-stat" id="mm-time"></span>
-        <span class="mini-stat" id="mm-score">0 分</span>
-        <button class="btn btn-ghost btn-sm" id="btn-mm-restart" type="button">重来</button>
-      </div>
-      <div class="mm-wrap">
-        <div class="mm-play-tip" id="mm-play-tip">💡 相邻方块点击换牌，<b class="mm-tip-hl">相同垃圾类型</b>相连消除</div>
-        <div class="mm-hud is-hidden" id="mm-hud">
-          <div class="mm-hud-top">
-            <span class="mm-hud-goal" id="mm-hud-goal"></span>
-            <span class="mm-hud-score" id="mm-hud-score">0</span>
-            <span class="mm-hud-time" id="mm-hud-time"></span>
-          </div>
-          <div class="mm-hud-bar"><i id="mm-hud-fill"></i></div>
-          <div class="mm-hud-extra" id="mm-hud-extra"></div>
-        </div>
-        <div id="r64-mm-fx-demo" aria-label="游玩分数示例">
-          <div class="r64-fx-title">游玩分数示例</div>
-          <div class="r64-fx-list"><!-- JS 按 config.matches 渲染：三连+X分 / 四连+X分 / 五连+X分 … -->
-            <span class="r64-fx-item">三连 +10 分</span>
-            <span class="r64-fx-item">四连 +20 分</span>
-            <span class="r64-fx-item">五连 +40 分</span>
-          </div>
-        </div>
-        <div class="mm-tools is-hidden" id="mm-tools">
-          <button class="mm-tool" id="btn-mm-hint" type="button"><span class="mm-tool-ico">💡</span><span class="mm-tool-name">提示</span><b id="mm-hint-left">2</b></button>
-          <button class="mm-tool" id="btn-mm-swap" type="button"><span class="mm-tool-ico">🔀</span><span class="mm-tool-name">置换</span><b id="mm-swap-left">2</b></button>
-          <button class="mm-tool" id="btn-mm-shuffle" type="button"><span class="mm-tool-ico">♻️</span><span class="mm-tool-name">洗牌</span><b id="mm-shuffle-left">2</b></button>
-        </div>
-        <div class="mm-board" id="mm-board"></div>
-      </div>
-      <div class="mm-overlay is-hidden" id="mm-overlay"></div>
-      <div id="mm-countdown" class="is-hidden" aria-hidden="true"></div>
-    </section>
-
-    <!-- ===== 去学习：垃圾分类小课堂 ===== -->
-    <section class="view is-hidden" id="view-learn" aria-label="去学习">
-      <div class="game-bar">
-        <button class="btn btn-sm btn-ghost" id="btn-learn-home" type="button">
-          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 3 3 10.5V21h6v-6h6v6h6V10.5L12 3z"/></svg>
-          首页
-        </button>
-        <h2 class="sub-title" id="learn-title">垃圾分类小课堂</h2>
-        <span class="mini-stat" id="learn-score"></span>
-      </div>
-      <div class="learn-wrap" id="learn-body"></div>
-    </section>
-
-    <!-- ===== 游戏 ===== -->
-    <section class="view is-hidden" id="view-game" aria-label="游戏">
-      <div class="game-bar">
-        <button class="btn btn-sm btn-ghost" id="btn-to-home" type="button">
-          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 3 3 10.5V21h6v-6h6v6h6V10.5L12 3z"/></svg>
-          首页
-        </button>
-        <img class="avatar-game" id="avatar-game-img" alt="小程引导员" title="小程 · 引导员">
-        <div class="avatar-bubble bubble-game is-hidden" id="game-bubble"></div>
-        <div class="game-progress">
-          <span class="progress-text" id="progress-text">0 / 8</span>
-          <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-          <span class="mini-stat" id="stat-round-correct">答对 0</span>
-          <span class="mini-stat" id="stat-round-earned">得分 +0</span>
-        </div>
-        <button class="btn btn-soft" id="btn-hint" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.3 2.5 5.8.8.9 1.5 1.8 1.5 3.2h6c0-1.4.7-2.3 1.5-3.2C17.8 13.3 19 11.4 19 9a7 7 0 0 0-7-7zm-1.5 18h3v2h-3v-2zm-1.5-5v-2h5v2H9z"/></svg>
-          提示卡 <span id="hint-count">0</span>
-        </button>
-        <button class="btn btn-ghost" id="btn-restart" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
-          再来一次
-        </button>
-      </div>
-      <p class="game-tip" id="game-tip">玩法：把垃圾拖到对应颜色的垃圾桶上，答对加分，答错不加分并看正确答案</p>
-      <div class="tray" id="tray" aria-label="待分类物品"></div>
-      <div class="bins" id="bins" aria-label="垃圾桶"></div>
-    </section>
-
-    <!-- ===== 结算 ===== -->
-    <section class="view is-hidden" id="view-result" aria-label="结算">
-      <div class="result-card">
-        <div class="result-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M5 4h14v2h-3l-1.5 9H20v2H4v-2h5.5L8 6H5V4zm5.5 3l1.3 7h3.4l1.3-7h-6zm-2 11a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm9 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg>
-        </div>
-        <h2 class="result-title">本轮完成</h2>
-        <div class="result-score" id="result-earned">+0</div>
-        <div class="result-confetti is-hidden" id="result-confetti" aria-hidden="true"></div>
-        <div class="result-stats">
-          <div class="stat"><span class="stat-num" id="result-correct">0</span><span class="stat-label">答对</span></div>
-          <div class="stat"><span class="stat-num" id="result-total">0</span><span class="stat-label">总题数</span></div>
-          <div class="stat"><span class="stat-num" id="result-rate">0%</span><span class="stat-label">正确率</span></div>
-        </div>
-        <div class="result-foot">
-          <span class="mini-stat">总积分 <b id="result-score-total">0</b></span>
-          <span class="mini-stat">单局最高 <b id="result-best">0</b></span>
-        </div>
-        <div class="result-actions">
-          <button class="btn btn-primary" id="btn-again" type="button">再来一局</button>
-          <button class="btn btn-ghost" id="btn-go-shop" type="button">去兑换</button>
-          <button class="btn btn-ghost" id="btn-home" type="button">返回首页</button>
-        </div>
-      </div>
-    </section>
   </main>
-
-  <!-- ===== 商城面板 ===== -->
-  <div class="panel-mask is-hidden" id="panel-shop-mask"></div>
-  <aside class="panel is-hidden" id="panel-shop" role="dialog" aria-label="积分商城">
-    <div class="panel-head">
-      <h2>积分商城</h2>
-      <span class="panel-balance" id="shop-balance">0 分</span>
-      <button class="btn btn-sm btn-danger" id="btn-reset-score" type="button">重置积分</button>
-      <button class="icon-btn" id="btn-close-shop" type="button" aria-label="关闭商城">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.4 5L12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4 6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
-      </button>
-    </div>
-    <div class="panel-body" id="shop-list"></div>
-  </aside>
-
-  <!-- ===== 编辑面板 ===== -->
-  <div class="panel-mask is-hidden" id="panel-edit-mask"></div>
-  <aside class="panel panel-wide is-hidden" id="panel-edit" role="dialog" aria-label="内容编辑">
-    <div class="panel-head">
-      <h2>内容编辑</h2>
-      <button class="icon-btn" id="btn-close-edit" type="button" aria-label="关闭编辑">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.4 5L12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4 6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
-      </button>
-    </div>
-    <div class="edit-tabs" role="tablist">
-      <button class="edit-tab is-active" data-tab="items" type="button">物品管理</button>
-      <button class="edit-tab" data-tab="bins" type="button">垃圾桶</button>
-      <button class="edit-tab" data-tab="mall" type="button">商城商品</button>
-      <button class="edit-tab" data-tab="avatar" type="button">引导形象</button>
-      <button class="edit-tab" data-tab="corner" type="button">角标与标题</button>
-      <button class="edit-tab" data-tab="data" type="button">数据管理</button>
-      <button class="edit-tab" data-tab="modules" type="button">模块设置</button>
-      <button class="edit-tab" data-tab="texts" type="button">文案设置</button>
-      <button class="edit-tab" data-tab="learn" type="button">题目题库</button>
-    </div>
-    <div class="panel-body" id="edit-items"></div>
-    <div class="panel-body is-hidden" id="edit-bins"></div>
-    <div class="panel-body is-hidden" id="edit-mall"></div>
-    <div class="panel-body is-hidden" id="edit-avatar"></div>
-    <div class="panel-body is-hidden" id="edit-corner"></div>
-    <div class="panel-body is-hidden" id="edit-data"></div>
-    <div class="panel-body is-hidden" id="edit-modules"></div>
-    <div class="panel-body is-hidden" id="edit-texts">
-      <!-- R64 称号段位编辑器骨架（段位列表+新增按钮占位；交互由 JS 实现） -->
-      <div id="r64-badges-editor">
-        <div class="r64-badges-head">称号段位管理
-          <span class="r63-et-hint">按最低积分升序排列；可在此新增 / 删除段位行</span>
-        </div>
-        <div id="r64-badges-list"><!-- JS 渲染段位行：最低积分 + 段位名 --></div>
-        <button class="btn btn-soft btn-sm" id="r64-badges-add" type="button">＋ 新增段位</button>
-      </div>
-    </div>
-    <div class="panel-body is-hidden" id="edit-learn"></div>
-  </aside>
-
-  <!-- ===== 已拥有面板 ===== -->
-  <div class="panel-mask is-hidden" id="panel-owned-mask"></div>
-  <aside class="panel is-hidden" id="panel-owned" role="dialog" aria-label="已拥有">
-    <div class="panel-head">
-      <h2>已拥有</h2>
-      <span class="panel-balance" id="owned-count">0 件</span>
-      <button class="icon-btn" id="btn-close-owned" type="button" aria-label="关闭已拥有">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.4 5L12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4 6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
-      </button>
-    </div>
-    <div class="panel-body" id="owned-list"></div>
-  </aside>
-
-  <!-- ===== 历史记录面板 ===== -->
-  <div class="panel-mask is-hidden" id="panel-history-mask"></div>
-  <aside class="panel is-hidden" id="panel-history" role="dialog" aria-label="历史记录">
-    <div class="panel-head">
-      <h2>历史记录</h2>
-      <button class="btn btn-sm btn-ghost" id="btn-clear-history" type="button">清空记录</button>
-      <button class="icon-btn" id="btn-close-history" type="button" aria-label="关闭历史记录">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.4 5L12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4 6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
-      </button>
-    </div>
-    <div class="panel-body">
-      <h3 class="his-title">游玩记录</h3>
-      <div id="his-games"></div>
-      <h3 class="his-title">兑换记录</h3>
-      <div id="his-trades"></div>
-      <h3 class="his-title">错题记录（不受重置影响）</h3>
-      <div id="his-wrongs"></div>
-      <button class="btn btn-sm btn-ghost" id="btn-clear-wrongs" type="button">清空错题记录</button>
-    </div>
-  </aside>
-
-  <!-- ===== 管理员验证面板 ===== -->
-  <div class="panel-mask is-hidden" id="admin-mask"></div>
-  <aside class="panel panel-narrow is-hidden" id="admin-panel" role="dialog" aria-label="管理员验证">
-    <div class="panel-head">
-      <h2>管理员验证</h2>
-      <button class="icon-btn" id="btn-close-admin" type="button" aria-label="关闭">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.4 5L12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4 6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
-      </button>
-    </div>
-    <div class="panel-body">
-      <p class="gate-tip">输入管理员密码后，才能编辑游戏内容。<br>编辑内容保存后，所有页面都会同步更新。</p>
-      <input class="form-control gate-input" id="admin-pass" type="password" maxlength="32" placeholder="请输入管理员密码" autocomplete="off">
-      <div class="acc-actions">
-        <button class="btn btn-primary" id="btn-admin-ok" type="button">确认</button>
-        <button class="btn btn-ghost" id="btn-admin-cancel" type="button" onclick="closeAdminGate()">取消</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ===== 账户面板 ===== -->
-  <div class="panel-mask is-hidden" id="panel-account-mask"></div>
-  <aside class="panel is-hidden" id="panel-account" role="dialog" aria-label="账户">
-    <div class="panel-head">
-      <h2>账户中心</h2>
-      <span class="panel-balance" id="account-balance"></span>
-      <button class="icon-btn" id="btn-close-account" type="button" aria-label="关闭账户">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.4 5L12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4 6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
-      </button>
-    </div>
-    <div class="panel-body" id="account-body"></div>
-  </aside>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="sfx-switch" id="sfx-switch" title="音效开关">🔊</div>
-  <!-- R65 反馈9：音量开关（JS Agent 绑定 #r65-sound-toggle 点击切换播放/静音） -->
-  <button id="r65-sound-toggle" type="button" aria-label="音量开关" title="音量开关">🔊</button>
-  <div class="drag-clone is-hidden" id="drag-clone"></div>
-  <div class="feedback" id="feedback" aria-hidden="true">
-    <img id="feedback-img-good" class="fb-good" alt="">
-    <img id="feedback-img-bad" class="fb-bad" alt="">
-    <span id="feedback-text"></span>
+  <div id="debug" aria-label="进度调试工具栏">
+    <label for="debug-progress">进度</label><input id="debug-progress" type="range" min="0" max="100" value="0">
+    <output id="debug-val">0%</output><button type="button" id="debug-restart">重播</button>
+    <button type="button" id="debug-finish">完成</button>
   </div>
-  <div class="corner-badge" id="corner-badge" aria-hidden="true">
-    <img id="corner-img" alt="">
-    <span id="corner-text"></span>
-  </div>
-
-  <script src="assets/lib/three.min.js"></script>
-  <script src="data.js"></script>
-  <script src="app.js"></script>
-  <script src="learn.js"></script>
+<a href="hall.html" style="position:fixed;z-index:100;bottom:16px;right:18px;padding:10px 18px;border-radius:24px;border:2px solid white;background:#fff8df;color:#076d6b;font:800 14px system-ui;text-decoration:none;box-shadow:0 3px 0 #078b84">先看游戏大厅 →</a>
 </body>
 </html>

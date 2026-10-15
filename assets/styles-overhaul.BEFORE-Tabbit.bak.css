@@ -1,0 +1,669 @@
+/* ============================================================
+   styles-overhaul.css  —  游戏本体皮肤层（对齐 v5 设计稿）
+   设计系统来源: draft_style.css (draft v5)
+   目标: 柔和「多巴胺」风 —— 去硬描边/硬投影/立体字/旋转，统一分类代表色
+   ============================================================ */
+
+/* ---------- 1. 设计令牌 ---------- */
+:root{
+  --ink:#2A2540; --ink2:#544E6B; --muted:#8B86A3; --faint:#B4AFC4;
+  --bg:#F7F3FB; --surface:#FFFFFF; --soft:#F3EEFA; --soft2:#EFE9F8;
+  --line:#EAE3F3; --line2:#E0D8EF;
+  --pri:#FF7A1A; --pri-d:#E8620A; --pri-soft:#FFEDDD; --pri-ink:#9A3D00;
+  --rec:#3B82F6; --rec-s:#EAF3FD; --rec-d:#1E5FA8;
+  --kit:#8B5E3C; --kit-s:#F3E9E0; --kit-d:#5E3E26;
+  --haz:#E5484D; --haz-s:#FDECEB; --haz-d:#AF2A2E;
+  --oth:#3D3A37; --oth-s:#EEECE9; --oth-d:#26241F;
+  --ok:#2FB86A; --ok-s:#E2F7EB; --ok-d:#1E8A4C;
+  --gold:#F7B500;
+  --r-sm:12px; --r:16px; --r-lg:22px; --r-xl:28px;
+  --sh-1:0 2px 10px rgba(42,37,64,.06);
+  --sh-2:0 10px 28px rgba(42,37,64,.10);
+  --sh-3:0 18px 44px rgba(42,37,64,.16);
+  --font-display:'ZCOOL KuaiLe','Noto Sans SC','PingFang SC',system-ui,sans-serif;
+  --font-body:'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+
+  /* 兼容游戏原有令牌名，让底层 rules 也吃到新皮肤 */
+  --bg-a:#F3EEFA; --bg-b:#FBF6F1;
+  --card:#FFFFFF; --card-2:#F3EEFA;
+  --accent:#FF7A1A; --accent-ink:#8F3E08;
+  --shadow:var(--sh-2); --shadow-lg:var(--sh-3);
+  --chip-bg:rgba(255,255,255,.86);
+  --radius:var(--r); --radius-lg:var(--r-lg);
+}
+
+/* ---------- 1b. 令牌再声明：压过 styles.css 里 body[data-skin="default"] 的暖色令牌 ---------- */
+body, body[data-skin="default"], body[data-skin], #desktop-win, #boot{
+  --ink:#2A2540 !important; --ink2:#544E6B !important; --muted:#8B86A3 !important; --faint:#B4AFC4 !important;
+  --bg:#F7F3FB !important; --surface:#FFFFFF !important; --soft:#F3EEFA !important; --soft2:#EFE9F8 !important;
+  --line:#EAE3F3 !important; --line2:#E0D8EF !important;
+  --pri:#FF7A1A !important; --pri-d:#E8620A !important; --pri-soft:#FFEDDD !important; --pri-ink:#9A3D00 !important;
+  --rec:#3B82F6 !important; --rec-s:#EAF3FD !important; --rec-d:#1E5FA8 !important;
+  --kit:#8B5E3C !important; --kit-s:#F3E9E0 !important; --kit-d:#5E3E26 !important;
+  --haz:#E5484D !important; --haz-s:#FDECEB !important; --haz-d:#AF2A2E !important;
+  --oth:#3D3A37 !important; --oth-s:#EEECE9 !important; --oth-d:#26241F !important;
+  --ok:#2FB86A !important; --ok-s:#E2F7EB !important; --ok-d:#1E8A4C !important;
+  --gold:#F7B500 !important;
+  --bg-a:#F3EEFA !important; --bg-b:#FBF6F1 !important;
+  --card:#FFFFFF !important; --card-2:#F3EEFA !important;
+  --accent:#FF7A1A !important; --accent-ink:#8F3E08 !important;
+  --shadow:0 10px 28px rgba(42,37,64,.10) !important; --shadow-lg:0 18px 44px rgba(42,37,64,.16) !important;
+  --chip-bg:rgba(255,255,255,.86) !important;
+  --radius:16px !important; --radius-lg:22px !important;
+  --candy-pink:#FF7A1A !important; --candy-purple:#8B5E3C !important; --candy-blue:#3B82F6 !important;
+  --candy-green:#2FB86A !important; --candy-yellow:#F7B500 !important; --candy-red:#E5484D !important;
+}
+
+/* ---------- 2. 全局 ---------- */
+html, body, body[data-skin="default"]{
+  background:linear-gradient(180deg,#F3EEFA 0%,#F7F3FB 42%,#FBF6F1 100%) !important;
+  color:var(--ink) !important;
+  font-family:var(--font-body) !important;
+  -webkit-font-smoothing:antialiased;
+}
+#desktop-win .desktop-win{
+  background:var(--bg) !important;
+  border:1px solid var(--line2) !important;
+  border-radius:var(--r-xl) !important;
+  box-shadow:var(--sh-3) !important;
+}
+#desktop-win .desktop-win-bar{
+  background:linear-gradient(180deg,#FFF8F1,#FBEFE3) !important;
+  border-bottom:1px solid var(--line) !important;
+}
+#desktop-win .dwb-title{color:var(--ink2) !important;font-weight:700 !important;}
+#desktop-win .dwb-dot{box-shadow:none !important;}
+
+/* ---------- 3. 顶栏 / 导航 ---------- */
+#desktop-win .topbar{background:transparent !important;border-bottom:0 !important;box-shadow:none !important;}
+#desktop-win .topbar-inner{
+  background:var(--surface) !important;
+  border-bottom:1px solid var(--line) !important;
+  box-shadow:var(--sh-1) !important;
+}
+#desktop-win .topbar-inner .brand-title, #desktop-win .brand-title{
+  font-family:var(--font-display) !important;
+  color:var(--ink) !important;
+  font-size:19px !important;
+}
+#desktop-win .brand-mark, #desktop-win .topbar-inner .brand-mark{
+  border-radius:12px !important;
+  background:linear-gradient(150deg,#FFC061,#FF7A1A) !important;
+  box-shadow:0 4px 12px rgba(255,122,26,.32) !important;
+  border:0 !important;
+}
+#desktop-win .chip, #desktop-win .mini-stat, #desktop-win .score-chip, #desktop-win .badge-chip{
+  background:var(--soft) !important;color:var(--ink2) !important;
+  border:1px solid var(--line) !important;border-radius:999px !important;
+  box-shadow:none !important;font-weight:700 !important;
+}
+#desktop-win .chip.gold, #desktop-win .score-chip{background:#FFF3D6 !important;color:#8A5A00 !important;}
+#desktop-win .chip.on{background:var(--kit-s) !important;color:var(--kit-d) !important;}
+
+#desktop-win .desk-nav{background:var(--surface) !important;border-right:1px solid var(--line) !important;box-shadow:none !important;}
+#desktop-win .desk-nav .dnv{
+  background:transparent !important;border:1.5px solid transparent !important;
+  border-radius:13px !important;color:var(--ink2) !important;
+  font-weight:700 !important;box-shadow:none !important;
+}
+#desktop-win .desk-nav .dnv:hover{background:var(--soft) !important;color:var(--ink) !important;transform:none !important;}
+#desktop-win .desk-nav .dnv.is-active, #desktop-win .desk-nav .dnv.active, #desktop-win .desk-nav .dnv[aria-current="true"]{
+  background:var(--pri-soft) !important;color:var(--pri-ink) !important;
+}
+#desktop-win .desk-nav .dnv svg{opacity:.9;}
+
+/* ---------- 4. 按钮 ---------- */
+#desktop-win .btn{
+  font-family:var(--font-body) !important;font-weight:800 !important;
+  border-radius:14px !important;box-shadow:none !important;
+  transition:.15s !important;
+}
+#desktop-win .btn-primary, #desktop-win .btn-pri{
+  background:linear-gradient(180deg,#FF9147,#FF7A1A) !important;
+  color:#fff !important;border:0 !important;
+  box-shadow:0 6px 16px rgba(255,122,26,.34) !important;
+}
+#desktop-win .btn-primary:hover, #desktop-win .btn-pri:hover{filter:brightness(1.04);transform:none !important;}
+#desktop-win .btn-ghost{
+  background:var(--surface) !important;border:1.5px solid var(--line2) !important;
+  color:var(--ink2) !important;
+}
+#desktop-win .btn-soft{background:var(--soft) !important;color:var(--ink2) !important;border:0 !important;}
+#desktop-win .btn-danger{background:var(--haz-s) !important;color:var(--haz-d) !important;border:0 !important;}
+#desktop-win .btn-lg{height:56px !important;font-size:17px !important;border-radius:17px !important;padding:0 40px !important;}
+#desktop-win .btn-sm{height:36px !important;font-size:13px !important;padding:0 14px !important;border-radius:11px !important;}
+#desktop-win .icon-btn{
+  background:var(--soft) !important;border-radius:11px !important;border:0 !important;
+  box-shadow:none !important;color:var(--ink2) !important;
+}
+#desktop-win .icon-btn:hover{background:var(--pri-soft) !important;color:var(--pri-ink) !important;}
+
+/* 进度条通用 */
+#desktop-win .progress-track, #desktop-win .track, #desktop-win .mm-hud-bar, #desktop-win .mm-hud-bar i{
+  background:var(--soft2) !important;border-radius:999px !important;border:0 !important;box-shadow:none !important;
+}
+#desktop-win .progress-fill, #desktop-win .mm-hud-bar i{
+  background:linear-gradient(90deg,#FFB25E,#FF7A1A) !important;border-radius:999px !important;
+}
+
+/* ---------- 5. 加载页 Boot ---------- */
+#boot{
+  background:
+    radial-gradient(820px 460px at 50% -6%,#FFF1DE 0%,rgba(255,241,222,0) 60%),
+    linear-gradient(180deg,#FFF9F0,#F3EEFA) !important;
+}
+#boot .boot-title{
+  font-family:var(--font-display) !important;
+  font-size:58px !important;line-height:1.05 !important;letter-spacing:3px !important;
+  color:#fff !important;
+  -webkit-text-stroke:6px var(--ink) !important;paint-order:stroke fill !important;
+  text-shadow:0 6px 0 rgba(42,37,64,.14) !important;
+  background:none !important;-webkit-text-fill-color:#fff !important;
+  position:static !important;transform:none !important;text-align:center !important;
+}
+#boot .boot-orange{
+  font-size:96px !important;line-height:1 !important;
+  filter:drop-shadow(0 16px 24px rgba(255,122,26,.28)) !important;
+}
+#boot .boot-deco{display:none !important;}
+#boot .boot-marks{
+  position:absolute !important;left:50% !important;bottom:30px !important;
+  transform:translateX(-50%) !important;display:flex !important;gap:18px !important;
+}
+#boot .boot-marks img{
+  width:58px !important;height:58px !important;border-radius:15px !important;
+  object-fit:cover !important;border:3px solid #fff !important;
+  box-shadow:var(--sh-1) !important;transform:none !important;
+}
+#boot .boot-bar{
+  width:380px !important;max-width:70vw !important;
+  height:14px !important;border-radius:999px !important;overflow:hidden !important;
+  background:#EFE7F6 !important;border:1px solid var(--line2) !important;
+  box-shadow:var(--sh-1) !important;
+}
+#boot .boot-bar i{background:linear-gradient(90deg,#FFB25E,#FF7A1A) !important;border-radius:999px !important;}
+#boot .boot-tip{
+  font-size:13.5px !important;color:var(--ink2) !important;
+  background:#fff !important;border:1px solid var(--line) !important;
+  padding:10px 22px !important;border-radius:999px !important;
+  box-shadow:var(--sh-1) !important;transform:none !important;
+}
+
+/* ---------- 6. 首页 / 开始画面 ---------- */
+#desktop-win #view-home .home-hero, #desktop-win .home-hero{background:transparent !important;}
+#desktop-win .home-splash{
+  background:
+    radial-gradient(700px 420px at 50% 8%,#FFF3E2 0%,rgba(255,243,226,0) 62%),
+    radial-gradient(620px 380px at 84% 92%,#E9F3FF 0%,rgba(233,243,255,0) 60%),
+    linear-gradient(180deg,#FFF9F1,#F3EEFA) !important;
+  border-radius:0 !important;box-shadow:none !important;border:0 !important;
+  width:100% !important;min-height:100% !important;padding:0 !important;
+}
+#desktop-win .splash-title{
+  font-family:var(--font-display) !important;
+  font-size:46px !important;letter-spacing:2px !important;color:var(--ink) !important;
+  text-shadow:none !important;-webkit-text-stroke:0 !important;line-height:1.15 !important;
+}
+#desktop-win .splash-sub{color:var(--ink2) !important;font-weight:700 !important;}
+#desktop-win .splash-learn-hint{color:var(--muted) !important;}
+#desktop-win .splash-mascot img{filter:drop-shadow(0 18px 28px rgba(255,122,26,.22));}
+#desktop-win .splash-marks .mark-item, #desktop-win .mk-btn{
+  background:#fff !important;border:1.5px solid var(--line) !important;border-radius:18px !important;
+  box-shadow:var(--sh-1) !important;transition:.16s !important;
+}
+#desktop-win .splash-marks .mark-item:hover{transform:translateY(-3px) !important;box-shadow:var(--sh-2) !important;border-color:#FFD9B8 !important;}
+#desktop-win .splash-marks .mark-item img{border-radius:14px !important;}
+#desktop-win .splash-marks .mark-item span, #desktop-win .mk-btn b{color:var(--ink) !important;font-weight:800 !important;}
+
+/* hero 大厅 */
+#desktop-win .hero-arena{
+  background:transparent !important;border:0 !important;box-shadow:none !important;
+}
+#desktop-win .hero-arena .hero-title, #desktop-win .hero-title{
+  font-family:var(--font-display) !important;color:var(--ink) !important;
+  text-shadow:none !important;-webkit-text-stroke:0 !important;
+}
+#desktop-win .hero-sub{color:var(--ink2) !important;}
+#desktop-win #redbox-game-name{color:var(--pri-ink) !important;background:var(--pri-soft) !important;border-radius:12px !important;}
+#desktop-win #greenbox-intro{
+  background:var(--rec-s) !important;color:var(--rec-d) !important;
+  border:1px solid var(--line) !important;border-radius:14px !important;box-shadow:none !important;
+}
+#desktop-win .module-card{
+  background:var(--surface) !important;
+  border:1.5px solid var(--line) !important;
+  border-radius:18px !important;
+  box-shadow:var(--sh-1) !important;
+  color:var(--ink) !important;transform:none !important;
+}
+#desktop-win .module-card:hover{transform:translateY(-3px) !important;box-shadow:var(--sh-2) !important;border-color:#FFD9B8 !important;}
+#desktop-win .module-card.is-active, #desktop-win .module-card[aria-pressed="true"]{
+  border-color:var(--pri) !important;background:var(--pri-soft) !important;
+  box-shadow:0 6px 16px rgba(255,122,26,.22) !important;
+}
+#desktop-win .module-card[data-module="classic"].is-active{border-color:var(--rec) !important;background:var(--rec-s) !important;}
+#desktop-win .module-card[data-module="flychess"].is-active{border-color:var(--kit) !important;background:var(--kit-s) !important;}
+#desktop-win .module-card[data-module="matches"].is-active{border-color:var(--ok) !important;background:var(--ok-s) !important;}
+#desktop-win .module-card[data-module="runner"].is-active{border-color:var(--haz) !important;background:var(--haz-s) !important;}
+#desktop-win .module-name{color:var(--ink) !important;font-weight:800 !important;}
+#desktop-win .module-desc, #desktop-win .module-desc{color:var(--muted) !important;}
+#desktop-win .learn-entry-big{
+  background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  border-radius:18px !important;box-shadow:var(--sh-1) !important;transform:none !important;
+}
+#desktop-win .learn-entry-big:hover{box-shadow:var(--sh-2) !important;transform:none !important;}
+#desktop-win .learn-entry-big .leb-title{color:var(--ink) !important;}
+#desktop-win .learn-entry-big .leb-sub{color:var(--muted) !important;}
+#desktop-win .learn-entry-big .leb-go{color:var(--pri-ink) !important;}
+#desktop-win #btn-random-play{
+  background:linear-gradient(180deg,#FF9147,#FF7A1A) !important;color:#fff !important;
+  border:0 !important;border-radius:16px !important;box-shadow:0 6px 16px rgba(255,122,26,.34) !important;
+  transform:none !important;
+}
+
+/* ---------- 7. 拖拽分类主界面 ---------- */
+#desktop-win .game-bar{background:var(--surface) !important;border-bottom:1px solid var(--line) !important;box-shadow:var(--sh-1) !important;}
+#desktop-win .sub-title, #desktop-win .game-bar h2{color:var(--ink) !important;font-weight:800 !important;}
+#desktop-win .game-tip{color:var(--ink2) !important;}
+#desktop-win .tray{
+  background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  border-radius:var(--r-lg) !important;box-shadow:var(--sh-1) !important;
+}
+#desktop-win .bin, #desktop-win .r63-bin{
+  border:1.5px solid var(--line) !important;border-radius:var(--r-lg) !important;
+  box-shadow:var(--sh-1) !important;background:var(--surface) !important;
+  transform:none !important;
+}
+#desktop-win .bin[data-cat="recyclable"], #desktop-win .r63-bin[data-cat="recyclable"]{background:var(--rec-s) !important;border-color:var(--rec) !important;}
+#desktop-win .bin[data-cat="kitchen"], #desktop-win .r63-bin[data-cat="kitchen"]{background:var(--kit-s) !important;border-color:var(--kit) !important;}
+#desktop-win .bin[data-cat="hazardous"], #desktop-win .r63-bin[data-cat="hazardous"]{background:var(--haz-s) !important;border-color:var(--haz) !important;}
+#desktop-win .bin[data-cat="other"], #desktop-win .r63-bin[data-cat="other"]{background:var(--oth-s) !important;border-color:var(--oth) !important;}
+#desktop-win .bin.is-over, #desktop-win .bin.drag-over, #desktop-win .r63-bin.is-over{filter:brightness(.98);}
+#desktop-win .avatar-game, #desktop-win .avatar-home{border-radius:18px !important;box-shadow:var(--sh-1) !important;}
+#desktop-win .avatar-bubble{background:#fff !important;border:1px solid var(--line) !important;border-radius:14px !important;box-shadow:var(--sh-1) !important;color:var(--ink) !important;}
+
+/* ---------- 8. 飞行棋 ---------- */
+#desktop-win .fc-wrap, #desktop-win .fc-board, #desktop-win .fc-side{
+  background:var(--surface) !important;border:1px solid var(--line) !important;
+  border-radius:var(--r-lg) !important;box-shadow:var(--sh-1) !important;
+}
+#desktop-win .fc-dice{border-radius:14px !important;box-shadow:var(--sh-1) !important;border:1.5px solid var(--line2) !important;}
+#desktop-win .fc-q-text{color:var(--ink) !important;font-weight:800 !important;}
+#desktop-win .fc-opts .btn{border-radius:12px !important;}
+#desktop-win .fc-players, #desktop-win .fc-rank, #desktop-win #fc-rules, #desktop-win #fc-roll-record{
+  background:var(--soft) !important;border:1px solid var(--line) !important;
+  border-radius:14px !important;box-shadow:none !important;color:var(--ink2) !important;
+}
+#desktop-win .fc-setup, #desktop-win .fc-question{background:transparent !important;}
+#desktop-win .setup-tip{color:var(--ink2) !important;}
+
+/* ---------- 9. 跑酷 ---------- */
+#desktop-win .rt-stage{background:#EAF3FD !important;border-radius:var(--r-lg) !important;border:1px solid var(--line) !important;overflow:hidden !important;}
+#desktop-win .rt-target-bar{background:var(--soft) !important;border:1px solid var(--line) !important;border-radius:999px !important;color:var(--ink2) !important;}
+#desktop-win .rt-jump{background:linear-gradient(180deg,#FF9147,#FF7A1A) !important;color:#fff !important;border:0 !important;border-radius:14px !important;box-shadow:0 6px 16px rgba(255,122,26,.34) !important;}
+#desktop-win .rt-tip{color:var(--ink2) !important;}
+#desktop-win .rt-overlay{background:rgba(247,243,251,.9) !important;border-radius:var(--r-lg) !important;}
+
+/* ---------- 10. 消消乐 ---------- */
+#desktop-win .mm-wrap{background:transparent !important;}
+#desktop-win .mm-play-tip{background:var(--surface) !important;border:1px solid var(--line) !important;border-radius:999px !important;color:var(--ink2) !important;box-shadow:var(--sh-1) !important;}
+#desktop-win .mm-tip-hl{color:var(--pri-ink) !important;}
+#desktop-win .mm-board{
+  background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  border-radius:var(--r-lg) !important;box-shadow:var(--sh-1) !important;
+}
+#desktop-win .mm-tool{
+  background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  border-radius:14px !important;box-shadow:var(--sh-1) !important;color:var(--ink) !important;
+}
+#desktop-win .mm-tool:hover{border-color:#FFD9B8 !important;box-shadow:var(--sh-2) !important;}
+#desktop-win .mm-hud{background:var(--soft) !important;border:1px solid var(--line) !important;border-radius:16px !important;}
+#desktop-win .mm-overlay{background:rgba(247,243,251,.9) !important;}
+#desktop-win #r64-mm-fx-demo{background:var(--soft) !important;border:1px solid var(--line) !important;border-radius:16px !important;color:var(--ink2) !important;}
+#desktop-win .r64-fx-item{background:var(--surface) !important;border:1px solid var(--line) !important;border-radius:999px !important;color:var(--ink2) !important;}
+
+/* ---------- 11. 小课堂 ---------- */
+#desktop-win .learn-wrap{background:transparent !important;}
+#desktop-win .learn-card, #desktop-win .r63-learn-card, #desktop-win .learn-body .card{
+  background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  border-radius:var(--r-lg) !important;box-shadow:var(--sh-1) !important;color:var(--ink) !important;
+}
+
+/* ---------- 12. 结算 ---------- */
+#desktop-win .result-card{
+  background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  border-radius:var(--r-xl) !important;box-shadow:var(--sh-3) !important;
+}
+#desktop-win .result-title{color:var(--ink) !important;font-family:var(--font-display) !important;}
+#desktop-win .result-score{color:var(--pri) !important;text-shadow:none !important;-webkit-text-stroke:0 !important;}
+#desktop-win .result-stats .stat{background:var(--soft) !important;border:1px solid var(--line) !important;border-radius:16px !important;}
+#desktop-win .result-stats .stat-num{color:var(--ink) !important;}
+#desktop-win .result-icon{color:var(--pri) !important;}
+#desktop-win .result-foot{color:var(--ink2) !important;}
+
+/* ---------- 13. 抽屉 / 面板 ---------- */
+#desktop-win .panel-mask{background:rgba(42,37,64,.34) !important;backdrop-filter:blur(3px) !important;}
+#desktop-win .panel{
+  background:var(--surface) !important;border-left:1px solid var(--line) !important;
+  box-shadow:var(--sh-3) !important;
+}
+#desktop-win .panel-head{background:var(--surface) !important;border-bottom:1px solid var(--line) !important;}
+#desktop-win .panel-head h2{color:var(--ink) !important;font-weight:800 !important;}
+#desktop-win .panel-balance{background:var(--pri-soft) !important;color:var(--pri-ink) !important;border-radius:999px !important;}
+#desktop-win .panel-body{background:var(--bg) !important;}
+#desktop-win .panel-body .edit-card, #desktop-win .edit-card{
+  background:var(--surface) !important;border:1px solid var(--line) !important;
+  border-radius:16px !important;box-shadow:var(--sh-1) !important;
+}
+#desktop-win .edit-tab{color:var(--ink2) !important;border-radius:11px !important;}
+#desktop-win .edit-tab.is-active{background:var(--pri-soft) !important;color:var(--pri-ink) !important;}
+#desktop-win #panel-edit input, #desktop-win #panel-edit select, #desktop-win #panel-edit textarea{
+  background:var(--surface) !important;border:1.5px solid var(--line2) !important;
+  border-radius:11px !important;color:var(--ink) !important;
+}
+#desktop-win #panel-edit input:focus, #desktop-win #panel-edit select:focus, #desktop-win #panel-edit textarea:focus{
+  border-color:var(--pri) !important;box-shadow:0 0 0 3px var(--pri-soft) !important;outline:none !important;
+}
+
+/* ---------- 14. 压掉 styles.css 的渐变文字 & 暖色硬边框 ---------- */
+.splash-title,.hero-title,.sub-title,.result-title,.boot-title,
+.module-name,.stat-num,.panel-head h2,.mm-pick-title,.r63-rt-pick-title,.r63-rt-name,
+#desktop-win .game-name, #desktop-win #redbox-game-name, #desktop-win .home-splash h1{
+  background:none !important;
+  -webkit-background-clip:border-box !important; background-clip:border-box !important;
+  -webkit-text-fill-color:currentColor !important; color:var(--ink) !important;
+  text-shadow:none !important; -webkit-text-stroke:0 !important;
+}
+#desktop-win .topbar{border-bottom:1px solid var(--line) !important;}
+#desktop-win .stat, #desktop-win .item-card{background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  box-shadow:var(--sh-1) !important;border-radius:16px !important;}
+#desktop-win .stat b, #desktop-win .stat-num{color:var(--ink) !important;}
+#desktop-win .game-bar{background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  border-radius:22px !important;box-shadow:var(--sh-1) !important;}
+#desktop-win .fc-question{background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  box-shadow:var(--sh-1) !important;border-radius:22px !important;}
+#desktop-win .rt-stage{background:#EAF3FD !important;border:1.5px solid var(--line) !important;
+  box-shadow:var(--sh-1) !important;border-radius:22px !important;}
+#desktop-win .mm-lv, #desktop-win .mm-tool{background:var(--surface) !important;border:1.5px solid var(--line) !important;
+  box-shadow:var(--sh-1) !important;border-radius:18px !important;}
+#desktop-win .panel-head{background:var(--surface) !important;border-bottom:1px solid var(--line) !important;}
+#desktop-win .panel-head h2{color:var(--ink) !important;}
+#desktop-win .fc-q-text, #desktop-win .fc-q-text b, #desktop-win .mm-pick-title, #desktop-win .r63-rt-pick-title, #desktop-win .r63-rt-name{color:var(--ink) !important;}
+#desktop-win .result-title{color:var(--ink) !important;}
+#desktop-win .lv-go, #desktop-win .mm-lv .lv-go{background:var(--pri) !important;color:#fff !important;}
+#desktop-win .howto-step b{background:var(--pri) !important;color:#fff !important;}
+
+/* ---------- 15. 加载页 Boot 结构对齐（仅CSS，保留 app.js 钩子） ---------- */
+#boot{
+  display:flex !important; flex-direction:column !important;
+  align-items:center !important; justify-content:center !important;
+  gap:20px !important;
+}
+#boot .boot-deco{display:none !important;}
+#boot .boot-orange, #boot #boot-orange{order:-1 !important;position:static !important;transform:none !important;
+  font-size:104px !important;line-height:1 !important;
+  filter:drop-shadow(0 18px 28px rgba(255,122,26,.30)) !important;}
+#boot .boot-title{order:0 !important;}
+#boot .boot-ring{
+  order:1 !important;position:relative !important;width:150px !important;height:150px !important;
+  display:grid !important;place-items:center !important;
+}
+#boot .boot-ring i{
+  position:absolute !important;inset:0 !important;border-radius:50% !important;
+  background:conic-gradient(var(--pri) var(--r64-prog,0%), #EFE7F6 0) !important;
+  -webkit-mask:radial-gradient(circle, transparent 55%, #000 56%) !important;
+  mask:radial-gradient(circle, transparent 55%, #000 56%) !important;
+}
+#boot .boot-ring .pct{
+  font-family:var(--font-display) !important;font-size:32px !important;color:var(--ink) !important;
+  font-weight:900 !important;
+}
+#boot .boot-ring .pct::after{content:var(--r64-prog,"") !important;}
+#boot .boot-bar{order:2 !important;width:360px !important;max-width:74vw !important;}
+#boot .boot-tip{order:3 !important;}
+#boot .boot-marks{
+  order:4 !important;position:absolute !important;left:50% !important;bottom:30px !important;
+  transform:translateX(-50%) !important;display:flex !important;gap:16px !important;
+}
+#boot .boot-marks img{
+  width:62px !important;height:62px !important;border-radius:16px !important;object-fit:cover !important;
+  border:3px solid #fff !important;box-shadow:var(--sh-1) !important;background:#fff !important;padding:0 !important;
+}
+
+/* ---------- 16. 外壳骨架对齐设计稿 .shell（修正作用域：外壳自身 + 同级抽屉） ---------- */
+html, body{ display:flex !important; align-items:center !important; justify-content:center !important; min-height:100vh !important; margin:0 !important; }
+#desktop-win{
+  width:1160px !important; height:730px !important; max-width:98vw !important; max-height:96vh !important;
+  margin:auto !important; overflow:hidden !important; position:relative !important;
+  display:flex !important; flex-direction:column !important;
+  background:var(--bg) !important; border:1px solid var(--line2) !important;
+  border-radius:28px !important; box-shadow:var(--sh-3) !important;
+}
+#desktop-win .desktop-win-bar{ display:none !important; }
+#desktop-win .topbar{ height:64px !important; flex:0 0 64px !important; display:flex !important; align-items:center !important; background:var(--surface) !important; border-bottom:1px solid var(--line) !important; box-shadow:none !important; }
+#desktop-win .topbar-inner{ height:64px !important; display:flex !important; align-items:center !important; gap:14px !important; padding:0 22px !important; background:var(--surface) !important; border-bottom:0 !important; box-shadow:none !important; }
+#desktop-win .desktop-body{ display:flex !important; flex-direction:row !important; flex:1 !important; min-height:0 !important; }
+#desktop-win .desk-nav{
+  width:188px !important; flex:0 0 188px !important; flex-direction:column !important;
+  align-items:stretch !important; gap:7px !important; padding:16px 14px !important;
+  background:var(--surface) !important; border-right:1px solid var(--line) !important; border-bottom:0 !important;
+  overflow:auto !important; box-shadow:none !important;
+}
+#desktop-win .desk-nav .dnv{ width:100% !important; justify-content:flex-start !important; }
+#desktop-win .stage{ flex:1 !important; min-width:0 !important; overflow:auto !important; padding:0 !important; }
+/* 抽屉面板（与 同级，需独立锚定） */
+#desktop-win #panel-shop, #desktop-win #panel-edit{ background:var(--surface) !important; border-left:1px solid var(--line) !important; box-shadow:var(--sh-3) !important; }
+#desktop-win #panel-shop-mask, #desktop-win #panel-edit-mask{ background:rgba(42,37,64,.34) !important; backdrop-filter:blur(3px) !important; }
+#desktop-win #panel-shop .panel-head, #desktop-win #panel-edit .panel-head{ background:var(--surface) !important; border-bottom:1px solid var(--line) !important; }
+#desktop-win #panel-shop .panel-head h2, #desktop-win #panel-edit .panel-head h2{ color:var(--ink) !important; font-weight:800 !important; }
+#desktop-win #panel-shop .panel-balance, #desktop-win #panel-edit .panel-balance{ background:var(--pri-soft) !important; color:var(--pri-ink) !important; border-radius:999px !important; }
+#desktop-win #panel-shop .panel-body, #desktop-win #panel-edit .panel-body{ background:var(--bg) !important; }
+#desktop-win #panel-shop .edit-card, #desktop-win #panel-edit .edit-card{ background:var(--surface) !important; border:1px solid var(--line) !important; border-radius:16px !important; box-shadow:var(--sh-1) !important; }
+#desktop-win #panel-shop .edit-tab, #desktop-win #panel-edit .edit-tab{ color:var(--ink2) !important; border-radius:11px !important; }
+#desktop-win #panel-shop .edit-tab.is-active, #desktop-win #panel-edit .edit-tab.is-active{ background:var(--pri-soft) !important; color:var(--pri-ink) !important; }
+#desktop-win #panel-edit input, #desktop-win #panel-edit select, #desktop-win #panel-edit textarea{ background:var(--surface) !important; border:1.5px solid var(--line2) !important; border-radius:11px !important; color:var(--ink) !important; }
+
+/* ============================================================
+   section 17 — 组件级设计接管：把游戏真实类名映射到 v5 设计稿组件规范
+   （保留全部游戏 class/id，app.js 绑定不受影响）
+   ============================================================ */
+
+/* 顶栏/导航（对齐 .s-top / .s-nav） */
+#desktop-win .topbar-inner{ height:64px !important; padding:0 22px !important; }
+#desktop-win .brand-title{ font-size:18px !important; letter-spacing:1px !important; }
+#desktop-win .desk-nav .dnv{ height:46px !important; padding:0 14px !important; gap:11px !important; font-size:14.5px !important; border-radius:13px !important; }
+#desktop-win .desk-nav .dnv .dnv-ico{ width:26px !important; height:26px !important; border-radius:9px !important; display:grid !important; place-items:center !important; background:var(--soft) !important; }
+
+/* 游戏条 gbar（对齐 .gbar） */
+#desktop-win .game-bar{ display:flex !important; align-items:center !important; gap:12px !important; padding:14px 22px !important; background:var(--surface) !important; border:0 !important; border-bottom:1px solid var(--line) !important; border-radius:0 !important; box-shadow:none !important; }
+#desktop-win .game-bar .sub-title{ font-family:var(--font-display) !important; font-size:19px !important; color:var(--ink) !important; }
+#desktop-win .game-bar .sp, #desktop-win .game-bar .game-bar-right{ margin-left:auto !important; display:flex !important; align-items:center !important; gap:9px !important; }
+
+/* 分类桶 bins（对齐 .bins / .bin） */
+#desktop-win .bins{ display:grid !important; grid-template-columns:repeat(4,1fr) !important; gap:14px !important; padding:16px 22px !important; flex:1 !important; }
+#desktop-win .bin{ border-radius:var(--r-lg) !important; border:2px solid var(--line2) !important; padding:14px !important; display:flex !important; flex-direction:column !important; gap:10px !important; box-shadow:none !important; background:var(--surface) !important; }
+#desktop-win .bin[data-cat="recyclable"]{ background:var(--rec-s) !important; border-color:#BBD8F7 !important; }
+#desktop-win .bin[data-cat="kitchen"]{ background:var(--kit-s) !important; border-color:#DCC6B2 !important; }
+#desktop-win .bin[data-cat="hazardous"]{ background:var(--haz-s) !important; border-color:#F6B7B5 !important; }
+#desktop-win .bin[data-cat="other"]{ background:var(--oth-s) !important; border-color:#C9C5BF !important; }
+#desktop-win .bin.is-over{ box-shadow:0 0 0 4px rgba(255,122,26,.18) !important; }
+#desktop-win .bin img{ border:2px solid #fff !important; border-radius:12px !important; box-shadow:var(--sh-1) !important; }
+
+/* 拖拽托盘 tray（对齐 .tray / .hrow） */
+#desktop-win .tray{ background:var(--surface) !important; border:0 !important; border-top:1px solid var(--line) !important; border-radius:0 !important; box-shadow:none !important; padding:14px 22px !important; }
+#desktop-win .tray .item, #desktop-win .drag-item{ background:var(--soft) !important; border:1px solid var(--line2) !important; border-radius:14px !important; box-shadow:none !important; }
+
+/* 按钮统一 .btn-pri / .btn-ghost / .btn-soft */
+#desktop-win .btn{ display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; font-weight:800 !important; font-size:14.5px !important; height:46px !important; padding:0 20px !important; border-radius:14px !important; }
+#desktop-win .btn-primary{ background:linear-gradient(180deg,#FF9147,#FF7A1A) !important; color:#fff !important; border:0 !important; box-shadow:0 6px 16px rgba(255,122,26,.34) !important; }
+#desktop-win .btn-ghost{ background:var(--surface) !important; border:1.5px solid var(--line2) !important; color:var(--ink2) !important; box-shadow:none !important; }
+#desktop-win .btn-soft{ background:var(--soft) !important; color:var(--ink2) !important; border:0 !important; box-shadow:none !important; }
+#desktop-win .btn-danger{ background:var(--haz-s) !important; color:var(--haz-d) !important; border:0 !important; box-shadow:none !important; }
+#desktop-win .btn-lg{ height:56px !important; font-size:17px !important; border-radius:17px !important; padding:0 40px !important; }
+#desktop-win .btn-sm{ height:36px !important; font-size:13px !important; padding:0 14px !important; border-radius:11px !important; }
+#desktop-win .icon-btn{ width:40px !important; height:40px !important; border-radius:12px !important; background:var(--soft) !important; border:0 !important; box-shadow:none !important; color:var(--ink2) !important; }
+
+/* chips */
+#desktop-win .chip, #desktop-win .score-chip, #desktop-win .mini-stat, #desktop-win .badge-chip{ height:34px !important; padding:0 14px !important; border-radius:999px !important; background:var(--soft) !important; border:0 !important; box-shadow:none !important; font-size:13px !important; font-weight:800 !important; color:var(--ink2) !important; display:inline-flex !important; align-items:center !important; gap:7px !important; }
+#desktop-win .score-chip{ background:var(--pri-soft) !important; color:var(--pri-ink) !important; }
+
+/* 飞行棋 fc-*（对齐设计稿 .fc-*） */
+#desktop-win .fc-wrap{ display:flex !important; gap:16px !important; padding:16px 22px !important; min-height:0 !important; }
+#desktop-win .fc-board{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; box-shadow:var(--sh-1) !important; padding:12px !important; }
+#desktop-win .fc-side{ width:290px !important; flex:0 0 290px !important; display:flex !important; flex-direction:column !important; gap:12px !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
+#desktop-win .fc-dice{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; padding:16px !important; box-shadow:var(--sh-1) !important; display:flex !important; align-items:center !important; gap:16px !important; }
+#desktop-win .fc-question{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; padding:16px !important; box-shadow:var(--sh-1) !important; }
+#desktop-win .fc-players, #desktop-win .fc-rank, #desktop-win #fc-rules, #desktop-win #fc-roll-record{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; padding:14px !important; box-shadow:var(--sh-1) !important; color:var(--ink2) !important; }
+#desktop-win .fc-q-text{ color:var(--ink) !important; font-weight:800 !important; font-size:16px !important; }
+#desktop-win .fc-opts .btn{ height:44px !important; }
+
+/* 消消乐 mm-*（对齐设计稿卡片圆角/柔和） */
+#desktop-win .mm-board{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; box-shadow:var(--sh-1) !important; }
+#desktop-win .mm-hud{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; box-shadow:var(--sh-1) !important; padding:14px !important; }
+#desktop-win .mm-tools{ display:flex !important; gap:12px !important; }
+#desktop-win .mm-tool{ background:#fff !important; border:1px solid var(--line) !important; border-radius:16px !important; box-shadow:var(--sh-1) !important; color:var(--ink) !important; }
+#desktop-win .mm-play-tip{ background:#fff !important; border:1px solid var(--line) !important; border-radius:999px !important; box-shadow:var(--sh-1) !important; color:var(--ink2) !important; }
+
+/* 跑酷 rt-* */
+#desktop-win .rt-stage{ background:#EAF3FD !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; box-shadow:var(--sh-1) !important; overflow:hidden !important; }
+#desktop-win .rt-controls{ display:flex !important; gap:12px !important; align-items:center !important; padding:14px 22px !important; }
+#desktop-win .rt-jump{ background:linear-gradient(180deg,#FF9147,#FF7A1A) !important; color:#fff !important; border:0 !important; border-radius:14px !important; box-shadow:0 6px 16px rgba(255,122,26,.34) !important; height:52px !important; padding:0 28px !important; font-size:16px !important; }
+#desktop-win .rt-target-bar{ background:var(--soft) !important; border:1px solid var(--line) !important; border-radius:999px !important; color:var(--ink2) !important; padding:8px 16px !important; }
+
+/* 结算 result（对齐设计稿 result） */
+#desktop-win .result-card{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-xl) !important; box-shadow:var(--sh-3) !important; padding:28px !important; }
+#desktop-win .result-title{ font-family:var(--font-display) !important; font-size:34px !important; color:var(--ink) !important; }
+#desktop-win .result-score, #desktop-win .result-score *{ color:var(--pri) !important; text-shadow:none !important; -webkit-text-stroke:0 !important; background:none !important; -webkit-text-fill-color:currentColor !important; font-family:var(--font-display) !important; }
+#desktop-win .result-stats{ display:flex !important; gap:12px !important; }
+#desktop-win .stat{ background:var(--soft) !important; border:1px solid var(--line) !important; border-radius:16px !important; box-shadow:none !important; padding:14px !important; }
+#desktop-win .stat-num{ font-family:var(--font-display) !important; color:var(--ink) !important; font-size:22px !important; }
+
+/* 抽屉面板（.panel，与 同级） */
+#desktop-win #panel-shop, #desktop-win #panel-edit{ background:#fff !important; border-left:1px solid var(--line) !important; box-shadow:var(--sh-3) !important; }
+#desktop-win #panel-shop .panel-head, #desktop-win #panel-edit .panel-head{ padding:16px 22px !important; border-bottom:1px solid var(--line) !important; }
+#desktop-win #panel-shop .panel-head h2, #desktop-win #panel-edit .panel-head h2{ font-family:var(--font-display) !important; font-size:20px !important; color:var(--ink) !important; }
+#desktop-win #panel-shop .edit-card, #desktop-win #panel-edit .edit-card{ background:#fff !important; border:1px solid var(--line) !important; border-radius:16px !important; box-shadow:var(--sh-1) !important; }
+#desktop-win #panel-edit .edit-tabs .edit-tab{ height:36px !important; padding:0 14px !important; border-radius:11px !important; color:var(--ink2) !important; }
+#desktop-win #panel-edit .edit-tabs .edit-tab.is-active{ background:var(--pri-soft) !important; color:var(--pri-ink) !important; }
+#desktop-win #panel-edit input, #desktop-win #panel-edit select, #desktop-win #panel-edit textarea{ background:#fff !important; border:1.5px solid var(--line2) !important; border-radius:11px !important; color:var(--ink) !important; }
+
+/* 门禁 gate（对齐设计稿 .gate） */
+#desktop-win .gate{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; box-shadow:var(--sh-1) !important; padding:26px !important; }
+#desktop-win .gate-input{ height:48px !important; border-radius:13px !important; border:1.5px solid var(--line2) !important; background:var(--soft) !important; color:var(--ink) !important; }
+#desktop-win .gate-tip{ font-size:12px !important; color:var(--muted) !important; }
+
+/* 引导员/头像 */
+#desktop-win .avatar-game, #desktop-win .avatar-home{ border-radius:18px !important; box-shadow:var(--sh-1) !important; border:3px solid #fff !important; }
+#desktop-win .avatar-bubble{ background:#fff !important; border:1px solid var(--line) !important; border-radius:14px !important; box-shadow:var(--sh-1) !important; color:var(--ink) !important; }
+
+/* 小课堂 learn */
+#desktop-win .learn-card, #desktop-win .learn-entry-big{ background:#fff !important; border:1px solid var(--line) !important; border-radius:var(--r-lg) !important; box-shadow:var(--sh-1) !important; }
+#desktop-win .leb-title{ color:var(--ink) !important; font-weight:800 !important; }
+#desktop-win .leb-sub{ color:var(--muted) !important; }
+#desktop-win .leb-go{ color:var(--pri-ink) !important; }
+
+/* 首页/开始画面细化 */
+#desktop-win .home-splash{ padding:34px 40px !important; }
+#desktop-win .splash-title{ font-size:48px !important; line-height:1.12 !important; margin-bottom:6px !important; }
+#desktop-win .splash-sub{ font-size:15px !important; margin-bottom:18px !important; }
+#desktop-win .splash-marks{ display:flex !important; gap:16px !important; }
+#desktop-win .mark-item{ background:#fff !important; border:1.5px solid var(--line) !important; border-radius:18px !important; box-shadow:var(--sh-1) !important; padding:12px !important; }
+#desktop-win .hero-arena{ padding:0 !important; }
+#desktop-win .hero-title{ font-size:40px !important; }
+#desktop-win .module-card{ background:#fff !important; border:1.5px solid var(--line) !important; border-radius:18px !important; box-shadow:var(--sh-1) !important; padding:16px !important; }
+#desktop-win .module-name{ font-size:15.5px !important; color:var(--ink) !important; }
+#desktop-win .module-desc{ font-size:12px !important; color:var(--muted) !important; }
+#desktop-win #btn-random-play{ background:linear-gradient(180deg,#FF9147,#FF7A1A) !important; color:#fff !important; border:0 !important; border-radius:16px !important; box-shadow:0 6px 16px rgba(255,122,26,.34) !important; height:52px !important; }
+
+/* ============================================================
+   section 18 — 全覆盖接管：游戏运行时类 → v5 设计稿视觉语言
+   策略：不碰 JS 绑定，仅对游戏真实类名施加设计系统
+   ============================================================ */
+
+/* 18.1 全局去"贴纸/霓虹"装饰（保留标题描边由更高优先规则） */
+p,span,b,small,em,
+#desktop-win label, #desktop-win li, #desktop-win td, #desktop-win th, #desktop-win div{
+  text-shadow:none !important;
+}
+#desktop-win *::before, #desktop-win *::after{ text-shadow:none !important; }
+
+/* 18.2 通用卡族 */
+.learn-card,.learn-grid,.learn-hero,.learn-quiz,
+.learn-chip,.learn-chips,.learn-quiz-opt,.learn-quiz-result,
+.learn-result-fb,.learn-result-actions,.learn-foot-note,
+.shop-card,.shop-info,.r63-badge-card,.r63-badge-panel,
+.r63-rec-card,.r63-redbox-lines,.r63-rules-card,.r63-rt-card,
+.r63-settle-card,.r63-end-round-btn,.r64-learn-editor,
+.r64-fx-list,.r65-done-card,.r65-bin-rule,.roundsize-pop,
+.scale-row,.toggle-row,.toast,.acc-head,
+#desktop-win .acc-cell, #desktop-win .gate, #desktop-win .desktop-win .card{
+  background:#fff !important;border:1px solid var(--line) !important;
+  border-radius:var(--r-lg) !important;box-shadow:var(--sh-1) !important;color:var(--ink) !important;
+}
+.r63-badge-head,.mm-hud,.mm-hud-top,.r63-run-hud,
+#desktop-win .rt3d-cd, #desktop-win .desktop-win .entry-card{
+  background:var(--soft) !important;border:1px solid var(--line) !important;
+  border-radius:16px !important;box-shadow:none !important;color:var(--ink2) !important;
+}
+
+/* 18.3 标题/数字 字体与颜色统一 */
+.learn-hero-name,.learn-card-name,.learn-quiz-q,
+.learn-result-score,.shop-name,.shop-price,
+.mm-hud-score,.mm-hud-time,.mm-level-mode,
+.r63-cat-name,.r63-settle-title,.r63-rt-name,.r63-modname,
+.r65-done-title,.r65-done-modname,.roundsize-pop-title,
+#desktop-win .scale-row b, #desktop-win .desktop-win .toggle-row b{
+  font-family:var(--font-display) !important;color:var(--ink) !important;
+  text-shadow:none !important;-webkit-text-stroke:0 !important;
+  background:none !important;-webkit-text-fill-color:currentColor !important;
+}
+#desktop-win .shop-price, #desktop-win .mm-hud-score, #desktop-win .learn-result-score{ color:var(--pri) !important; }
+
+/* 18.4 chips / pills / badges */
+.learn-chip,.mm-extra-chip,.r63-badge-name,
+.r63-score,.desktop-win .r63-time,.desktop-win .lv-badge,.desktop-win .pending-tip,
+#desktop-win .r63-reward, #desktop-win .desktop-win .size-note{
+  background:var(--soft) !important;color:var(--ink2) !important;border:1px solid var(--line) !important;
+  border-radius:999px !important;box-shadow:none !important;font-weight:800 !important;
+}
+
+/* 18.5 按钮族（含运行时） */
+.learn-quiz-cta,.learn-card-cta,.shop-action,
+.r63-end-round-btn,.r63-run-restart,.r63-rt-go,
+#desktop-win .r63-mod-reset, #desktop-win .r65-sound-toggle, #desktop-win .learn-result-actions .btn{
+  border-radius:14px !important;font-weight:800 !important;
+}
+.learn-quiz-cta,.learn-card-cta,.shop-action,
+#desktop-win .r63-run-restart, #desktop-win .r63-rt-go{
+  background:linear-gradient(180deg,#FF9147,#FF7A1A) !important;color:#fff !important;border:0 !important;
+  box-shadow:0 6px 16px rgba(255,122,26,.34) !important;
+}
+#desktop-win .r63-mod-reset, #desktop-win .r65-sound-toggle{
+  background:var(--soft) !important;color:var(--ink2) !important;border:1px solid var(--line) !important;box-shadow:none !important;
+}
+
+/* 18.6 学习页/测验 */
+#desktop-win .learn-hero{background:linear-gradient(100deg,#EEF7FF,#FFF3E4) !important;border-color:#FFE1C2 !important;}
+#desktop-win .learn-hero-mark, #desktop-win .learn-card-mark, #desktop-win .learn-hero-name img{ border:3px solid #fff !important;border-radius:50% !important;box-shadow:var(--sh-1) !important; }
+#desktop-win .learn-quiz-opt{ background:var(--soft) !important;border:1px solid var(--line) !important;border-radius:14px !important;color:var(--ink2) !important; }
+#desktop-win .learn-quiz-opt.is-correct, #desktop-win .learn-quiz-opt.ok{ background:var(--rec-s) !important;border-color:var(--rec) !important;color:var(--rec-d) !important; }
+#desktop-win .learn-quiz-opt.is-wrong, #desktop-win .learn-quiz-opt.no{ background:var(--haz-s) !important;border-color:var(--haz) !important;color:var(--haz-d) !important; }
+
+/* 18.7 消消乐格子 */
+#desktop-win .mm-cell{ border-radius:12px !important;box-shadow:var(--sh-1) !important;border:1px solid var(--line) !important;text-shadow:none !important; }
+#desktop-win .mm-level-pick{ background:#fff !important;border:1px solid var(--line) !important;border-radius:var(--r-lg) !important;box-shadow:var(--sh-1) !important; }
+
+/* 18.8 飞行棋/跑酷 运行时 */
+#desktop-win .r63-run-field, #desktop-win .r63-run-ground{ background:#EAF3FD !important;border-radius:var(--r-lg) !important; }
+#desktop-win .r63-stage, #desktop-win .r63-run-over{ background:#EEF4FB !important;border-radius:var(--r-lg) !important; }
+#desktop-win .mm-wrap, #desktop-win .learn-wrap, #desktop-win .rt-wrap{ background:transparent !important; }
+
+/* 18.9 数据行/记录行 */
+.r63-rec-row,.r63-modrow,.r63-modrow-main,.r64-fx-item,
+#desktop-win .mm-hud-extra, #desktop-win .desktop-win .hrow{
+  background:#fff !important;border:1px solid var(--line) !important;border-radius:13px !important;box-shadow:var(--sh-1) !important;color:var(--ink2) !important;
+}
+#desktop-win .r63-rec-row b, #desktop-win .r63-modrow b, #desktop-win .desktop-win .hrow b{ color:var(--ink) !important; }
+
+/* 18.10 抽屉/编辑 运行时 */
+#desktop-win .panel-narrow, #desktop-win .panel-wide, #desktop-win .desktop-win .acc-grid{ background:transparent !important; }

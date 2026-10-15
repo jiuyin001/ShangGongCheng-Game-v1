@@ -1,0 +1,232 @@
+:root{--w:1672;--h:941;--deep:#006a75;--orange:#ffa629;--mint:#49ebbc;--cream:#fffbea;--shadow:#075d76}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:#69ccc2}
+#viewport{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden;background:#80d4ca}
+#frame{position:relative;flex:none;overflow:hidden;box-shadow:0 7px 32px #005d581b}
+#stage{position:absolute;left:0;top:0;width:1672px;height:941px;overflow:hidden;transform-origin:0 0;isolation:isolate}
+.scene{position:absolute;inset:0;width:1672px;height:941px;user-select:none;pointer-events:none;display:block;image-rendering:auto}
+/* The only altered background regions are the truck extraction hole and progress UI. */
+#rail{position:absolute;z-index:3;left:473px;top:769px;width:602px;height:70px;border:5px solid #fff;
+ border-radius:55px;background:linear-gradient(180deg,#e7ffff 0%,#d9ffff 38%,#e9fffc 100%);
+ box-shadow:0 0 0 3px #008e9a,0 6px 0 #168f95,0 10px 9px #007c743d,inset 0 0 0 2px #4cdeef;pointer-events:none}
+.rail-inner{position:absolute;left:8px;right:8px;top:9px;bottom:8px;border-radius:40px;
+ background:linear-gradient(180deg,#005f6d,#0e9192 47%,#006d74);
+ box-shadow:inset 0 4px 8px #0049509a,0 0 0 2px #45cbdb;overflow:hidden}
+.fill{position:absolute;left:0;top:0;bottom:0;width:0%;max-width:100%;border-radius:40px;
+ background:linear-gradient(180deg,#b9ff55 0%,#78f867 30%,#3ce6a1 78%,#16dcb6 100%);
+ box-shadow:inset 1px 3px 2px #ffffffa1,inset 0 -3px 3px #16ad9199,0 0 11px #d5ff88ad;
+ overflow:hidden;transition:none}
+.stripe-flow{position:absolute;inset:0;width:calc(100% + 160px);
+ background:repeating-linear-gradient(128deg,transparent 0,transparent 22px,#ffffff36 22px,#ffffff36 39px,transparent 39px,transparent 51px);
+ animation:flow 1.9s linear infinite}
+.fill-highlight{position:absolute;top:4px;left:3%;right:6%;height:5px;border-radius:99px;background:#ffffff82}
+.rail-flare{position:absolute;inset:0;border-radius:40px;box-shadow:inset 0 1px 2px #fff9;pointer-events:none}
+#truck{position:absolute;z-index:7;left:472px;top:738px;width:169px;height:114px;pointer-events:none;will-change:transform;filter:drop-shadow(0 2px 1px #05726a35)}
+.truck-bob{position:relative;width:100%;height:100%;transform-origin:50% 80%}
+#truck img{position:absolute;inset:0;width:169px;height:114px;object-fit:contain;user-select:none}
+#truck.moving .truck-bob{animation:truckBounce .38s ease-in-out infinite}
+.wheel{display:none;position:absolute;width:13px;height:13px;border-radius:50%;border:2px dashed #eaf2e9;mix-blend-mode:soft-light;animation:wheelSpin .52s linear infinite}
+#truck.moving .wheel{display:block}
+.wheel-a{left:49px;top:83px}.wheel-b{left:93px;top:85px}.wheel-c{left:132px;top:88px}
+#number-mask{position:absolute;z-index:8;left:1086px;top:764px;width:133px;height:66px;
+ border-radius:22px;background:linear-gradient(100deg,#fafff8,#ffffff 30%,#fffefd);
+ display:flex;align-items:center;justify-content:center;pointer-events:none}
+#number{color:#006b6b;font-size:54px;font-weight:1000;line-height:1;letter-spacing:-3px;
+ -webkit-text-stroke:.4px #087a77;text-shadow:1px 2px 0 #d9fff1;font-variant-numeric:tabular-nums}
+#fact-replace{position:absolute;z-index:5;left:520px;top:850px;width:613px;height:47px;
+ background:linear-gradient(90deg,#f6fff0 0%,#fafff7 67%,#fffff8 100%);
+ display:flex;align-items:center;padding:0 4px;overflow:hidden;pointer-events:none;opacity:0;border-radius:3px}
+#fact-replace.visible{opacity:1}
+#fact-text{font-weight:850;font-size:19px;line-height:1.3;white-space:nowrap;color:#087d80;
+ overflow:hidden;text-overflow:clip;max-width:100%;display:block;transform:translateZ(0)}
+#fact-replace.pulse #fact-text{animation:factSlide .26s both}
+.hit{position:absolute;z-index:9;padding:0;border:0;appearance:none;background:none;color:transparent;cursor:pointer;touch-action:manipulation}
+.hit:focus-visible{outline:4px solid #fff16f;outline-offset:0;border-radius:16px;box-shadow:0 0 0 7px #047a80}
+#fact-next{left:1135px;top:844px;width:161px;height:56px;border-radius:28px}
+#bin-recycle{left:496px;top:510px;width:232px;height:233px}
+#bin-wet{left:740px;top:510px;width:231px;height:233px}
+#bin-hazard{left:985px;top:510px;width:233px;height:233px}
+#bin-dry{left:1231px;top:510px;width:231px;height:233px}
+.bin-hit{border-radius:25px}
+.bin-hit:hover{box-shadow:inset 0 0 30px #ffffff28,0 0 0 3px #fff9}
+.bin-hit:active{transform:translateY(2px)}
+#sound-control{position:absolute;z-index:11;right:24px;top:24px;display:flex;align-items:center;gap:7px;
+ padding:8px 14px;border:3px solid #fff;background:#fff8da;color:#157c80;border-radius:30px;
+ font:900 15px/1.1 "Microsoft YaHei","PingFang SC",sans-serif;
+ box-shadow:0 5px 0 #078c87,0 6px 12px #00475b5a;cursor:pointer;transition:transform .18s,box-shadow .18s}
+#sound-control:hover{transform:translateY(-3px);box-shadow:0 8px 0 #078c87,0 9px 14px #00475b5a}
+#sound-control:active{transform:translateY(4px);box-shadow:0 1px 0 #078c87}
+#sound-control:focus-visible{outline:4px solid #ffda1c;outline-offset:3px}
+#sound-control[data-on="true"]{background:#ffffa4;color:#06756f}
+#sound-control .sound-wave{opacity:.42}
+#sound-control[data-on="true"] .sound-wave{opacity:1}
+#effects{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.spark{position:absolute;font-weight:900;color:#fff8a3;opacity:.75;text-shadow:0 2px 0 #1eafbd,0 0 5px white;animation:sparkle 2.3s ease-in-out infinite}
+.mascot-spark{left:435px;top:505px;font-size:34px;animation-delay:.1s}
+.mascot-spark-two{left:379px;top:477px;font-size:18px;color:#fefafd;animation-delay:1.2s}
+.bin-spark{font-size:20px;animation:binPing 2.6s ease-in-out infinite}
+.s-blue{left:662px;top:485px;color:#fffde3;animation-delay:0s}
+.s-brown{left:898px;top:486px;color:#fef0a4;animation-delay:.65s}
+.s-red{left:1161px;top:482px;color:#fff6a2;animation-delay:1.3s}
+.s-gray{left:1401px;top:489px;color:#ddfdff;animation-delay:1.95s}
+.float-leaf{position:absolute;width:20px;height:11px;border-radius:90% 5% 90% 5%;background:#dfff8d;
+ box-shadow:inset -2px -2px 0 #6ab87e,0 1px 2px #1d9d8380;opacity:.78;animation:leafDrift 7s linear infinite}
+.leaf-a{left:121px;top:222px;transform:rotate(16deg);animation-delay:0s}
+.leaf-b{left:1310px;top:196px;width:16px;animation-delay:2.2s}
+.leaf-c{left:1540px;top:414px;width:14px;animation-delay:4.4s}
+.water-gleam{position:absolute;width:39px;height:3px;border-radius:99px;background:#f5ffff;box-shadow:0 0 8px #fff;opacity:0;animation:waterGlint 5.5s ease-in-out infinite}
+.g1{left:807px;top:410px}.g2{left:1175px;top:408px;animation-delay:1.8s}.g3{left:1359px;top:391px;animation-delay:3.7s}
+#confetti{position:absolute;inset:0;z-index:19;pointer-events:none}
+#complete{position:absolute;inset:0;z-index:20;display:grid;place-items:center;
+ background:#006b7370;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .44s ease,visibility .44s}
+#complete.open{opacity:1;visibility:visible;pointer-events:auto}
+.finish-card{position:relative;width:560px;max-width:calc(100% - 48px);padding:31px 30px 32px;
+ border:9px solid white;outline:5px solid #068d92;border-radius:53px 37px 58px 37px;
+ background:linear-gradient(152deg,#fffee9 0%,#fff7ca 72%,#fff1c7 100%);
+ box-shadow:0 15px 0 #066d7e,0 24px 32px #002f4563;text-align:center;transform:rotate(-2deg) scale(.86);
+ transition:transform .4s cubic-bezier(.2,1.4,.4,1)}
+#complete.open .finish-card{transform:rotate(-2deg) scale(1)}
+.finish-star{position:absolute;right:-26px;top:-29px;color:#ffcf00;font-size:64px;-webkit-text-stroke:3px white;text-shadow:4px 3px 0 #f9863b}
+.finish-eyebrow{margin:2px 0 3px;font-weight:1000;color:#1d9a92;font-size:23px}
+#finish-heading{margin:4px 0 8px;font-weight:1000;font-size:70px;line-height:1.18;color:#ff8f25;
+ -webkit-text-stroke:2px #fff;text-shadow:4px 5px 0 #068a94,0 9px 0 #fff}
+.finish-description{font-size:23px;font-weight:850;color:#087c82;margin:3px 0 23px}
+.start-button{display:inline-flex;align-items:center;gap:14px;border:6px solid #fff;border-radius:25px 42px 24px 37px;
+ padding:13px 33px;color:#8b3b0a;font-size:32px;font-weight:1000;font-family:inherit;
+ background:linear-gradient(150deg,#ffef6b 0%,#ffc533 52%,#ff8f2c 100%);
+ box-shadow:0 7px 0 #d77519,0 10px 0 4px #087e8c;cursor:pointer;transition:transform .14s,box-shadow .14s}
+.start-button:hover{transform:rotate(-2deg) translateY(-4px);box-shadow:0 11px 0 #d77519,0 14px 0 4px #087e8c}
+.start-button:active{transform:translateY(6px);box-shadow:0 1px 0 #d77519,0 4px 0 4px #087e8c}
+.start-button:focus-visible{outline:5px solid #3b87e8;outline-offset:7px}
+.finish-hint{font-size:15px;font-weight:750;color:#37a29a;margin:22px 0 0}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#debug{position:fixed;z-index:99;bottom:13px;left:13px;display:none;gap:9px;align-items:center;
+ background:#ffffef;color:#07585c;border:2px solid #fff;padding:9px 13px;border-radius:14px;
+ box-shadow:0 5px 17px #004b4c5e;font:14px system-ui,sans-serif}
+#debug.visible{display:flex}#debug input{width:180px}#debug button{cursor:pointer}
+/* Snapshot for byte-equal acceptance test: no overlays, no animations, no UI except the approved master. */
+/* Snapshot artwork is assigned by app.js, avoiding a duplicated embedded image. */
+body.snapshot #stage>:not(.scene){display:none!important}
+@keyframes flow{from{transform:translateX(-65px)}to{transform:translateX(0)}}
+@keyframes truckBounce{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(-.3deg)}}
+@keyframes wheelSpin{to{transform:rotate(360deg)}}
+@keyframes sparkle{0%,100%{opacity:.15;transform:scale(.66) rotate(-8deg)}50%{opacity:1;transform:scale(1.24) rotate(9deg)}}
+@keyframes binPing{0%,100%{opacity:.05;transform:translateY(4px) scale(.65)}35%{opacity:.9;transform:translateY(-7px) scale(1.2)}60%{opacity:0;transform:translateY(-13px) scale(.7)}}
+@keyframes waterGlint{0%,75%,100%{opacity:0;transform:translateX(-12px) scaleX(.4)}30%{opacity:.88;transform:translateX(15px) scaleX(1.25)}}
+@keyframes leafDrift{0%{opacity:0;transform:translate(0,-18px) rotate(12deg)}18%{opacity:.8}80%{opacity:.7}100%{opacity:0;transform:translate(45px,70px) rotate(225deg)}}
+@keyframes factSlide{from{opacity:.1;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.stripe-flow,.truck-bob,.spark,.float-leaf,.water-gleam,.wheel{animation:none!important}#complete,.finish-card,.start-button{transition:none!important}#effects{display:none}}
+
+/* =============================================================
+ * V3: substantive motion with actual extracted art, NOT recreated icons.
+ * These sprites were extracted pixel-for-pixel from the approved master.
+ * The original RGB artwork is retained; the background plate is independently reconstructed.
+ * ============================================================= */
+#art-characters{position:absolute;inset:0;z-index:4;pointer-events:none}
+.character-sprite{display:block;position:absolute;object-fit:contain;user-select:none;will-change:transform;transform-origin:50% 92%}
+#mascot-sprite{left:8px;top:316px;width:485px;height:550px;transform-origin:49% 86%;animation:mascotHop 3.65s ease-in-out infinite}
+.bin-sprite{animation:binBoing 4.4s cubic-bezier(.34,.04,.27,1) infinite}
+#sprite-blue{left:484px;top:477px;width:254px;height:285px;animation-delay:.26s}
+#sprite-brown{left:730px;top:475px;width:254px;height:286px;animation-delay:1.36s}
+#sprite-red{left:968px;top:487px;width:277px;height:276px;animation-delay:2.46s}
+#sprite-black{left:1215px;top:487px;width:283px;height:280px;animation-delay:3.56s}
+@keyframes mascotHop{
+  0%,7%,43%,100%{transform:translateY(0)}
+  20%{transform:translateY(-14px)}
+  28%{transform:translateY(-4px)}
+  35%{transform:translateY(0)}
+}
+@keyframes binBoing{
+  0%,13%,45%,100%{transform:translateY(0)}
+  26%{transform:translateY(-10px)}
+  35%{transform:translateY(-2px)}
+  41%{transform:translateY(0)}
+}
+/* Controls live in clear sky, fully outside the approved sorting labels. */
+#audio-tools{position:absolute;top:24px;right:173px;z-index:12;display:flex;gap:9px;align-items:center}
+#music-control{display:flex;align-items:center;gap:6px;padding:9px 14px;
+ border:3px solid #fff;border-radius:40px;background:#ffec9e;color:#146c79;
+ box-shadow:0 5px 0 #0a9a9b,0 8px 12px #005f7760;cursor:pointer;
+ font:900 15px/1.1 "Microsoft YaHei","PingFang SC",sans-serif;transition:transform .2s,box-shadow .2s}
+#music-control>span:first-child{font-size:22px;line-height:12px;color:#ef749b}
+#music-control:hover{transform:translateY(-3px);box-shadow:0 8px 0 #0a9a9b,0 10px 15px #005f7760}
+#music-control:active{transform:translateY(3px);box-shadow:0 2px 0 #0a9a9b}
+#music-control[data-on="true"]{background:#f8ff98;color:#087967}
+#music-control[data-on="true"]>span:first-child{animation:musicalFloat 1s ease-in-out infinite}
+#volume-wrap{height:39px;display:flex;align-items:center;gap:4px;background:#fffff1ed;
+ border:2px solid white;border-radius:25px;padding:4px 10px;color:#14949a;
+ box-shadow:0 3px 0 #189a94;font-size:17px}
+#music-volume{width:71px;height:19px;cursor:pointer;accent-color:#fb8b31}
+#audio-tools button:focus-visible,#music-volume:focus-visible{outline:4px solid #ffc833;outline-offset:4px}
+#ambient-layer{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.orbit-star{position:absolute;color:#fffdd3;filter:drop-shadow(0 0 6px #ffe771);
+  -webkit-text-stroke:1px #fefaff;font-size:35px;animation:orbitStar 3.2s ease-in-out infinite;opacity:0}
+.orbit-a{left:424px;top:377px;animation-delay:0s}
+.orbit-b{left:76px;top:474px;font-size:21px;animation-delay:.72s}
+.orbit-c{left:452px;top:651px;font-size:18px;animation-delay:1.9s}
+.orbit-d{left:363px;top:303px;font-size:24px;animation-delay:2.75s}
+.shine-dash{position:absolute;height:4px;width:56px;opacity:0;
+ border-radius:90%;background:#fdffff;box-shadow:0 0 13px 5px #c7fff7ad;
+ animation:riverDash 6s ease-in-out infinite}
+.shine-1{left:722px;top:414px;animation-delay:.3s}
+.shine-2{left:974px;top:393px;animation-delay:1.4s;width:37px}
+.shine-3{left:1137px;top:432px;animation-delay:2.9s}
+.shine-4{left:1344px;top:406px;animation-delay:3.7s;width:45px}
+.shine-5{left:594px;top:430px;animation-delay:5.1s;width:33px}
+.petal-fall{--dx:42px;position:absolute;top:-30px;width:17px;height:12px;pointer-events:none;
+ background:linear-gradient(120deg,#e9ff7c 0%,#74dd70 53%,#2db685 100%);border-radius:100% 5% 100% 6%;
+ box-shadow:0 1px 2px #176f4960;opacity:0;animation:petalFall 7.8s linear infinite}
+.fall-1{left:139px;animation-delay:0s;--dx:105px}
+.fall-2{left:357px;animation-delay:-3.2s;--dx:-52px;width:11px;height:8px}
+.fall-3{left:511px;animation-delay:-6s;--dx:93px}
+.fall-4{left:1050px;animation-delay:-2.1s;--dx:-85px}
+.fall-5{left:1260px;animation-delay:-4.5s;--dx:66px}
+.fall-6{left:1525px;animation-delay:-1s;--dx:-92px}
+.fall-7{left:743px;animation-delay:-5.3s;--dx:44px;width:12px;height:8px}
+.fall-8{left:920px;animation-delay:-7s;--dx:-45px;width:12px;height:8px}
+.mini-bubble{position:absolute;bottom:203px;width:16px;height:16px;border:3px solid #ffffffc7;border-radius:50%;
+ box-shadow:inset 0 0 2px #fff,0 0 5px #58f4f3;opacity:0;animation:popBubble 4.8s ease-in infinite}
+.bubble-1{left:593px;animation-delay:0s}.bubble-2{left:850px;animation-delay:.95s;width:11px;height:11px}
+.bubble-3{left:1091px;animation-delay:1.9s}.bubble-4{left:1363px;animation-delay:2.85s;width:12px;height:12px}
+.bubble-5{left:431px;animation-delay:3.8s}
+.click-star{position:absolute;pointer-events:none;color:#fff2a1;text-shadow:1px 3px 0 #ff8b38,0 0 12px #fff;
+ animation:clickBurst .8s ease-out forwards;font-size:27px;font-weight:900;z-index:17}
+.bubble-caption{position:absolute;pointer-events:none;padding:7px 13px;border:3px solid white;border-radius:20px 9px 21px 13px;
+ background:#ffe66b;color:#16788a;font-size:20px;font-weight:1000;box-shadow:0 4px 0 #e78c2c,0 7px 8px #045f706e;
+ z-index:16;animation:popCaption 1.1s ease-out both;white-space:nowrap}
+@keyframes musicalFloat{0%,100%{transform:rotate(-12deg) translateY(1px)}50%{transform:rotate(12deg) translateY(-2px)}}
+@keyframes orbitStar{0%,100%{opacity:0;transform:rotate(-12deg) scale(.5)}35%,56%{opacity:1;transform:rotate(13deg) scale(1.25)}83%{opacity:0;transform:rotate(22deg) scale(.8)}}
+@keyframes riverDash{0%,100%{opacity:0;transform:translateX(-30px) scaleX(.3)}28%{opacity:.87}55%{opacity:.53;transform:translateX(53px) scaleX(1.2)}82%{opacity:0;transform:translateX(75px) scaleX(.5)}}
+@keyframes petalFall{0%{opacity:0;transform:translate3d(0,0,0) rotate(3deg)}14%{opacity:.85}77%{opacity:.8}100%{opacity:0;transform:translate3d(var(--dx),600px,0) rotate(420deg)}}
+@keyframes popBubble{0%,100%{opacity:0;transform:translateY(0) scale(.4)}18%{opacity:.8}75%{opacity:.6}95%{opacity:0;transform:translateY(-135px) scale(1.4)}}
+@keyframes clickBurst{0%{opacity:0;transform:translate(0,12px) scale(.45) rotate(-25deg)}30%{opacity:1}100%{opacity:0;transform:translate(var(--tx,40px),var(--ty,-55px)) rotate(65deg) scale(1.3)}}
+@keyframes popCaption{0%{opacity:0;transform:translateY(18px) rotate(-9deg) scale(.45)}30%{opacity:1;transform:translateY(-22px) rotate(4deg) scale(1.09)}60%{opacity:1;transform:translateY(-21px) rotate(-2deg)}100%{opacity:0;transform:translateY(-70px) scale(.9)}}
+/* A clicked bin visibly reacts, while its source artwork remains unmodified. */
+.bin-sprite.cheer{animation:binCheer .7s ease-in-out both!important}
+#mascot-sprite.cheer{animation:mascotCheer .8s ease-in-out both!important}
+@keyframes binCheer{0%,100%{transform:translateY(0)}25%{transform:translateY(-20px)}55%{transform:translateY(-3px)}80%{transform:translateY(-10px)}}
+@keyframes mascotCheer{0%,100%{transform:translateY(0)}34%{transform:translateY(-24px)}60%{transform:translateY(0)}83%{transform:translateY(-8px)}}
+body.snapshot #audio-tools,body.snapshot #art-characters,body.snapshot #ambient-layer{display:none!important}
+@media(prefers-reduced-motion:reduce){
+ .character-sprite,.orbit-star,.shine-dash,.petal-fall,.mini-bubble,.click-star,.bubble-caption,#music-control>span:first-child{animation:none!important}
+ .bubble-caption,.click-star,.orbit-star,.petal-fall,.mini-bubble,.shine-dash{display:none!important}
+}
+
+/* Ground shadows are independent of character pixels. */
+#ground-shadows{position:absolute;inset:0;z-index:2;pointer-events:none}
+.ground-shadow{position:absolute;border-radius:50%;background:radial-gradient(ellipse,#77501b55 0%,#77501b25 52%,transparent 72%);transform-origin:center;animation:binShadow 4.4s cubic-bezier(.34,.04,.27,1) infinite}
+#shadow-mascot{left:235px;top:825px;width:135px;height:29px;animation:mascotShadow 3.65s ease-in-out infinite}
+#shadow-blue{left:494px;top:732px;width:233px;height:28px;animation-delay:.26s}
+#shadow-brown{left:738px;top:732px;width:226px;height:28px;animation-delay:1.36s}
+#shadow-red{left:977px;top:732px;width:246px;height:28px;animation-delay:2.46s}
+#shadow-black{left:1221px;top:736px;width:250px;height:28px;animation-delay:3.56s}
+@keyframes mascotShadow{0%,7%,43%,100%{transform:scale(1);opacity:.75}20%{transform:scale(.78);opacity:.38}28%{transform:scale(.92);opacity:.62}}
+@keyframes binShadow{0%,13%,45%,100%{transform:scale(1);opacity:.8}26%{transform:scale(.85);opacity:.42}35%{transform:scale(.97);opacity:.7}}
+.ground-shadow.cheer{animation:cheerShadow .7s ease-in-out both!important}
+#shadow-mascot.cheer{animation-duration:.8s!important}
+@keyframes cheerShadow{0%,100%{transform:scale(1);opacity:.8}25%,34%{transform:scale(.74);opacity:.3}60%{transform:scale(.97);opacity:.7}80%{transform:scale(.85);opacity:.5}}
+#mascot-hit{left:12px;top:323px;width:465px;height:525px;border-radius:50%}
+#replay{border:0;border-radius:18px;background:#e8fff3;color:#087a78;font-family:inherit;font-size:18px;font-weight:800;line-height:1.2;padding:8px 20px;cursor:pointer;margin-top:6px}
+#replay:focus-visible{outline:3px solid #ffa629;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.ground-shadow{animation:none!important}}
